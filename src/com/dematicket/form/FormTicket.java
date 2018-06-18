@@ -91,8 +91,8 @@ public class FormTicket extends javax.swing.JFrame {
         loadFechaToFechaProcesoBD();
         initComponents();
         btnIniciarDia.setVisible(false);
-        btnCerrarTurno.setVisible(false);
-        btnImprimeCuadre.setVisible(false);
+        btnCerrarTurno.setVisible(true);
+        btnImprimeCuadre.setVisible(true);
         lblTurno.setVisible(false);
         loadComboTipo();
         loadComboTipoDocumento();
@@ -113,6 +113,8 @@ public class FormTicket extends javax.swing.JFrame {
             btnSincronizar.setVisible(false);
         }
         
+        recuperaTurno(UsuarioData.getUsuario().getEmpresa(), UsuarioData.getUsuario().getTienda(), 
+                UsuarioData.getUsuario().getPtoVenta(),true);
     }
     
     /**
@@ -1251,7 +1253,7 @@ public class FormTicket extends javax.swing.JFrame {
             ventasCabeceraVO.setCODIGOCLIENTE(SesionData.getSesion().getCodigoCliente());
             ventasCabeceraVO.setCLASEAUX(SesionData.getSesion().getClaseAux());
             ventasCabeceraVO.setCLIERUC((ticket.getIdentificacionCliente().trim().compareTo("")==0?"00000000":ticket.getIdentificacionCliente()));//si no ingresa ruc le pone el codigo de cliente genérico
-            ventasCabeceraVO.setTURNO("TURN");//falta colocar el turno
+            ventasCabeceraVO.setTURNO(SesionData.getSesion().getTurno());
             ventasCabeceraVO.setVEID(UsuarioData.getUsuario().getUsuario());//codigo del vendedor
             ventasCabeceraVO.setFORMAPAGO(SesionData.getSesion().getFormaPago());
             String tmoneda="";
@@ -1860,8 +1862,9 @@ public class FormTicket extends javax.swing.JFrame {
                 "FACISCMO,FACISCMN,FACISCME,FACTOTMO,FACTOTMN,FACTOTME,FACTIP,TIPODOCUMENTO,TIPPERID,FACDSCTO1, " +
                 "FACIMPREP,FACFEVCMTO,FACTCLI,FACTDES,CLIEDIR,TIPOADQ,FACIGV2MN,FACIGV2ME,FACIGV2MO,INICIAL, " +
                 "FACSERMO,FACSERMN,FACSERME,PORIGV,PORSER " +
-                "FROM DMTICKET.DMT_VENTAS_CAB WHERE FECHAPROCESO=STR_TO_DATE(?,'%Y/%m/%d')");
+                "FROM DMTICKET.DMT_VENTAS_CAB WHERE FECHAPROCESO=STR_TO_DATE(?,'%Y/%m/%d') AND TURNO=?");
             consulta.setString(1, Util.obtieneFechaDia());
+            consulta.setString(2, SesionData.getSesion().getTurno());
             ResultSet res = consulta.executeQuery();
             if(!res.next()){
                 JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA CON INFORMACIÓN DE VENTAS PARA LA ACTUAL FECHA DE PROCESO", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
@@ -1888,7 +1891,9 @@ public class FormTicket extends javax.swing.JFrame {
                 sheet.addCell(new jxl.write.Label(2, row, UsuarioData.getUsuario().getNombre(), new WritableCellFormat(cellFont)));
                 row++;
                 sheet.addCell(new jxl.write.Label(0, row, "COMPAÑIA", new WritableCellFormat(cellFontBold) ));
-                sheet.addCell(new jxl.write.Label(1, row, SesionData.getSesion().getCompania(), new WritableCellFormat(cellFont) ));
+                //sheet.addCell(new jxl.write.Label(1, row, SesionData.getSesion().getCompania(), new WritableCellFormat(cellFont) ));
+                sheet.addCell(new jxl.write.Label(1, row, lblCompania.getText(), new WritableCellFormat(cellFont) ));
+                
                 row++;
                 sheet.addCell(new jxl.write.Label(0, row, "TURNO", new WritableCellFormat(cellFontBold) ));
                 sheet.addCell(new jxl.write.Label(1, row, Util.completarIzquierda(8, SesionData.getSesion().getTurno()+"", "0"), new WritableCellFormat(cellFont) ));
@@ -2293,8 +2298,49 @@ public class FormTicket extends javax.swing.JFrame {
         }
     }
     
+    private void recuperaTurno(String ciaid, String tienda, String ptvta, boolean accion){
+        String turnoBD="0000";
+        SesionData.getSesion().setIdcompania(UsuarioData.getUsuario().getEmpresa());      
+        SesionData.getSesion().setTienda(UsuarioData.getUsuario().getTienda());
+        SesionData.getSesion().setPtoventa(UsuarioData.getUsuario().getPtoVenta());
+        DbConnection conex= new DbConnection();
+        try{
+            if(accion){
+                PreparedStatement consulta = conex.getConnection().prepareStatement("SELECT TURNO "
+                    + " FROM DMTICKET.dmt_puntovta_mae WHERE CIAID=? AND TDAID=? AND PVTAID=?");
+                consulta.setString(1, SesionData.getSesion().getIdcompania());
+                consulta.setString(2, SesionData.getSesion().getTienda());   
+                consulta.setString(3, SesionData.getSesion().getPtoventa());
+                ResultSet res = consulta.executeQuery();
+                if(res.next()){
+                    turnoBD = res.getString("TURNO");                
+                }
+                res.close();
+                consulta.close();
+                SesionData.getSesion().setTurno(turnoBD);
+            }else{
+                PreparedStatement consulta =conex.getConnection().prepareStatement("UPDATE DMTICKET.dmt_puntovta_mae "
+                        + "SET TURNO=? "
+                        + "WHERE CIAID=? AND TDAID=? AND PVTAID=?");
+                consulta.setString(1, SesionData.getSesion().getTurno());
+                consulta.setString(2, UsuarioData.getUsuario().getEmpresa());
+                consulta.setString(3, UsuarioData.getUsuario().getTienda());   
+                consulta.setString(4, UsuarioData.getUsuario().getPtoVenta());
+                consulta.executeUpdate();
+                consulta.close();
+            }
+            conex.desconectar();
+                
+        }catch(Exception ex){
+            conex.desconectar();
+            ex.printStackTrace();
+        } 
+    }
+    
     private void btnCerrarTurnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarTurnoActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:        
+        DbConnection conex= new DbConnection();       
+        
         int dialogButton = JOptionPane.showConfirmDialog (null, 
                 "ESTA SEGURO QUE DESEA CERRAR EL TURNO "+
                 Util.completarIzquierda(8, SesionData.getSesion().getTurno()+"", "0").toUpperCase()+
@@ -2304,13 +2350,21 @@ public class FormTicket extends javax.swing.JFrame {
                 //imprimirCuadre();
                 imprimirReporte();
                 copyFile();
-                sendFile();
-                SesionData.getSesion().setTurno(SesionData.getSesion().getTurno()+1);
+                //sendFile(); // se comento
+                int turno = Integer.parseInt(SesionData.getSesion().getTurno())+1;
+                        
+                SesionData.getSesion().setTurno(Util.completarIzquierda(4, ""+turno, "0"));
                 if(SesionData.getSesion().getFechaProceso().compareTo(Util.obtieneFechaDia())!=0){
                     SesionData.getSesion().setFechaProceso(Util.obtieneFechaDia());
                 }
+                //actualiza el turno ene la BD con el correlativo
+                recuperaTurno(UsuarioData.getUsuario().getEmpresa(), UsuarioData.getUsuario().getTienda(), 
+                UsuarioData.getUsuario().getPtoVenta(),false);
+                
+                
                 grabarDataUsers();
                 limpiarTicket();
+                
             }catch(Exception ex){
                 ex.printStackTrace();
             }

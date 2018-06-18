@@ -42,7 +42,7 @@ public class Sesion {
     private int numero = 5000;
     private int topeNumero = 0;
     private int impresiones = 1;
-    private int turno = 1;
+    private String turno = "1";
     private BigDecimal igvPorcentaje = new BigDecimal(18);
     private String copyFilePath = "";
     private String impresora = "";
@@ -325,11 +325,11 @@ public class Sesion {
         this.impresiones = impresiones;
     }
 
-    public int getTurno() {
+    public String getTurno() {
         return turno;
     }
 
-    public void setTurno(int turno) {
+    public void setTurno(String turno) {
         this.turno = turno;
     }
 

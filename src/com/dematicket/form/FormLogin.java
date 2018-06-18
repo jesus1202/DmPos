@@ -271,7 +271,8 @@ public class FormLogin extends JFrame{
             SesionData.getSesion().setUnidadMedida(maestroVentasVO.getUNIDADMEDIDA());
             
             
-            SesionData.getSesion().setTurno(Integer.parseInt(maestroVentasVO.getTURNO()));
+            //SesionData.getSesion().setTurno(Integer.parseInt(maestroVentasVO.getTURNO()));
+            SesionData.getSesion().setTurno(maestroVentasVO.getTURNO());
             SesionData.getSesion().setImpresiones(Integer.parseInt(maestroVentasVO.getIMPRESIONES()));
             SesionData.getSesion().setIgvPorcentaje(new BigDecimal(maestroVentasVO.getIGVPORCENTAJE()));
             SesionData.getSesion().setTipoCliente(maestroVentasVO.getTIPOCLIENTE());
