@@ -149,6 +149,8 @@ public class FormSupervisorValidator extends javax.swing.JFrame {
         //String path = new File ("").getAbsolutePath();
         //path = path+"\\img\\";
         this.setTitle("DmPos - Autorizar");
+        userValidar.setText("");
+        PassValidar.setText("");
         //this.setIconImage(new ImageIcon(path+"logowindow.png").getImage());         
         
     }

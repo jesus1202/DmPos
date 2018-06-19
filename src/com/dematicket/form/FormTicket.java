@@ -833,7 +833,7 @@ public class FormTicket extends javax.swing.JFrame {
         }else{
             btnIniciarDia.setEnabled(false);
         }
-        txtFiltro.setText("Filtro Conceptos...");
+        txtFiltro.setText("Filtro Productos...");
     }
     
     private void calculaTotal(){
@@ -846,7 +846,7 @@ public class FormTicket extends javax.swing.JFrame {
         total.setScale(4, RoundingMode.HALF_UP);
         total = cantidad.multiply(monto);
         
-        if(jcbTipoMoneda.getSelectedItem()!=null){       
+        if((jcbTipoMoneda.getSelectedItem()!=null) && !(jcbTipoMoneda.getSelectedItem().toString().startsWith("-"))){       
             String tmoneda="";
             TipoCambioVO tipoCambio = TipoCambioDAO.consultarTipoCambio();
             BigDecimal tcambio=new BigDecimal(tipoCambio.getTcompra());
