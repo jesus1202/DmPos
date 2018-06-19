@@ -2426,6 +2426,17 @@ public class FormTicket extends javax.swing.JFrame {
         if (txtRUCDNI.getText().length() > 7 && k!=KeyEvent.VK_ENTER) {            
                 evt.setKeyChar((char) KeyEvent.VK_CLEAR);//Limpiar el caracter ingresado
                 JOptionPane.showMessageDialog(null, "EL DNI DEBE SER DE 8 DIGITOS", "DmPos",JOptionPane.ERROR_MESSAGE);                      
+        }else if(txtRUCDNI.getText().length() == 8 && k == KeyEvent.VK_ENTER){
+            ClienteVO clienteVO = ClienteData.getClientexNumDoc(txtRUCDNI.getText());
+            if(clienteVO!=null){
+                 txtCliente.setText(clienteVO.getCLIENOM());
+                 txtDireccionP.setText(clienteVO.getCLIEDIR());                 
+            }else{
+                txtCliente.setText("OTROS");
+                txtDireccionP.setText("");
+                btnUserMaintenance.setFocusPainted(true);
+                JOptionPane.showMessageDialog(null, "CLIENTE NO REGISTRADO, POR FAVOR INGRESARLO DATOS DEL CLIENTE", "DmPos",JOptionPane.ERROR_MESSAGE);
+            }
         }
         
     }//GEN-LAST:event_txtRUCDNIKeyTyped
@@ -2614,7 +2625,7 @@ public class FormTicket extends javax.swing.JFrame {
             ArrayList<DetalleTicket> listaDetalles = ticket.getDetalleTicket();
             ConceptoCobro concepto= null;
             if(jcbTipoMoneda.getSelectedItem().toString().startsWith("Dolar")){
-                lblExchangeRate.setText(tipoCambio.getTcompra());
+                lblExchangeRate.setText(tipoCambio.getTventa());
                 if(modelo!=null){
                     if(modelo.getRowCount()>0){
                         System.out.println("filas  Dolar-> "+modelo.getRowCount());
@@ -2623,7 +2634,7 @@ public class FormTicket extends javax.swing.JFrame {
                                 BigDecimal precioUnitario = new BigDecimal((String) modelo.getValueAt(i, 1));
                                 BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 4));
                                 //System.out.println("Antes : "+precioUnitario+"  -  "+subTotal);
-                                tcambio=new BigDecimal(tipoCambio.getTcompra());
+                                tcambio=new BigDecimal(tipoCambio.getTventa());
                                 modelo.setValueAt(Util.formatDecimal((precioUnitario.divide(tcambio,2,RoundingMode.HALF_UP)).doubleValue()), i, 1);
                                 modelo.setValueAt(Util.formatDecimal((subTotal.divide(tcambio,2,RoundingMode.HALF_UP)).doubleValue()), i, 4);
                                 modelo.setValueAt("D",i,2);
@@ -2653,7 +2664,7 @@ public class FormTicket extends javax.swing.JFrame {
                 }
                 //btnExchangeRate.setEnabled(true);            
             }else{
-                lblExchangeRate.setText("");
+                lblExchangeRate.setText(tipoCambio.getTventa());
                 if(modelo!=null){
                     if(modelo.getRowCount()>0){
                         System.out.println("filas  Soles-> "+modelo.getRowCount());
@@ -2661,7 +2672,7 @@ public class FormTicket extends javax.swing.JFrame {
                             for(int i=0; i<modelo.getRowCount();i++){
                                 BigDecimal precioUnitario = new BigDecimal((String) modelo.getValueAt(i, 1));
                                 BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 4));
-                                tcambio=new BigDecimal(tipoCambio.getTcompra());
+                                tcambio=new BigDecimal(tipoCambio.getTventa());
                                 //aca es para modificar
                                 BigDecimal monto =precioUnitario.multiply(tcambio);
                                 modelo.setValueAt(Util.formatDecimal(monto.doubleValue()), i, 1);
