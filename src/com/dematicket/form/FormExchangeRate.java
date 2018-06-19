@@ -159,12 +159,12 @@ public class FormExchangeRate extends javax.swing.JFrame {
         boolean exito= true;
         exito= tipoCambioDAO.insertarActualizarTipoCambio(exchangeRateBuy.getText(), exchangeRateSell.getText());        
         if(exito){
-           JOptionPane.showMessageDialog(null, "TIPO DE CAMBIO GRABADO CORRECTAMENTE", "DeMaTicket", JOptionPane.WARNING_MESSAGE);            
+           JOptionPane.showMessageDialog(null, "TIPO DE CAMBIO GRABADO CORRECTAMENTE", "DmPos", JOptionPane.WARNING_MESSAGE);            
            TipoCambioVO tipoCambioVO = TipoCambioDAO.consultarTipoCambio();
            lblExchangeRate.setText(tipoCambioVO.getTcompra());
            this.setVisible(false);
         }else{
-           JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR TIPO DE CAMBIO", "DeMaTicket", JOptionPane.WARNING_MESSAGE); 
+           JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR TIPO DE CAMBIO", "DmPos", JOptionPane.WARNING_MESSAGE); 
         }
     }//GEN-LAST:event_btnOKPassChangeActionPerformed
 

@@ -400,7 +400,7 @@ public class FormAnulacion extends javax.swing.JFrame {
         ArrayList<VentasDetalleVO> ventasDetalleVOList=null;
         
         if(ventasCabeceraVO == null){
-            JOptionPane.showMessageDialog(null, "EL TICKET NO EXISTE O SE ENCUENTRA ANULADO", "DeMaTicket",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "EL TICKET NO EXISTE O SE ENCUENTRA ANULADO", "DmPos",JOptionPane.WARNING_MESSAGE);
             return;
         }
         ventasDetalleVOList = buscaDetalleBD();
@@ -862,7 +862,7 @@ public class FormAnulacion extends javax.swing.JFrame {
                         StandardCopyOption.REPLACE_EXISTING);            
         }else{
             Limpiar();
-            JOptionPane.showMessageDialog(null, "NO SE PUEDE REIMPRIMIR EL TICKET, CONTACTE AL ADMINISTRADOR", "DeMaTicket",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "NO SE PUEDE REIMPRIMIR EL TICKET, CONTACTE AL ADMINISTRADOR", "DmPos",JOptionPane.ERROR_MESSAGE);
         }        
        }catch(Exception ex){
             ex.printStackTrace();

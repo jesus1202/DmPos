@@ -12,6 +12,9 @@ import com.dematicket.data.DistritoDAO;
 import com.dematicket.data.DocSunatDAO;
 import com.dematicket.data.ProvinciaDAO;
 import com.dematicket.data.TClienteDAO;
+import static com.dematicket.form.FormTicket.txtCliente;
+import static com.dematicket.form.FormTicket.txtRUCDNI;
+import static com.dematicket.form.FormTicket.txtDireccionP;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -460,6 +464,7 @@ public class FormUserMaintainer extends javax.swing.JFrame {
            jcbDocSunat.setSelectedItem(docSunatVO.getCodigo()+"-"+docSunatVO.getDescripcion());
            
            txtNumDocu.setText(clienteVO.getCLIERUC());
+           txtRUCDNI.setText(clienteVO.getCLIERUC());//lo coloca tambien en el formulario principal
            
            if(clienteVO.getTpersona()=="01"){
                jcbTpersona.setSelectedIndex(0);
@@ -469,6 +474,7 @@ public class FormUserMaintainer extends javax.swing.JFrame {
            }
            
            txtNombres.setText(clienteVO.getCLIENOM());
+           txtCliente.setText(clienteVO.getCLIENOM());//lo coloca tambien en el formulario principal
            
            if(clienteVO.getTpersona()=="M"){
                jcbSexo.setSelectedIndex(0);
@@ -488,6 +494,7 @@ public class FormUserMaintainer extends javax.swing.JFrame {
            //System.out.println(formateador.format(date));
            
            txtDireccion.setText(clienteVO.getCLIEDIR());
+           txtDireccionP.setText(clienteVO.getCLIEDIR());
            
            txtEmail.setText(clienteVO.getMail());
            txtTelefono1.setText(clienteVO.getTelefono1());
@@ -510,6 +517,9 @@ public class FormUserMaintainer extends javax.swing.JFrame {
            }          
            
         }else{
+            txtRUCDNI.setText("");//lo coloca tambien en el formulario principal
+            txtCliente.setText("OTROS");
+            txtDireccionP.setText("");
             this.setSize(710, 135);
             JOptionPane.showMessageDialog(null, "CLIENTE NO REGISTRADO", "DmPos", JOptionPane.INFORMATION_MESSAGE);
         }

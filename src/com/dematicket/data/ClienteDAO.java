@@ -7,6 +7,9 @@
 package com.dematicket.data;
 
 import com.dematicket.bean.ClienteVO;
+import static com.dematicket.form.FormTicket.txtCliente;
+import static com.dematicket.form.FormTicket.txtDireccionP;
+import static com.dematicket.form.FormTicket.txtRUCDNI;
 import com.dematicket.util.DbConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -169,7 +172,9 @@ public class ClienteDAO {
            //JOptionPane.showMessageDialog(null, "usuario o clave incorrecta\n"); 
        }
        conex.desconectar();
-       
+       txtRUCDNI.setText(codCliente);//lo coloca tambien en el formulario principal
+       txtCliente.setText(nombre);
+       txtDireccionP.setText(direccion);
   } catch (Exception e) {
    JOptionPane.showMessageDialog(null, "no se pudo consultar al Usuario\n"+e);
   }

@@ -91,8 +91,8 @@ public class FormTicket extends javax.swing.JFrame {
         loadFechaToFechaProcesoBD();
         initComponents();
         btnIniciarDia.setVisible(false);
-        btnCerrarTurno.setVisible(true);
-        btnImprimeCuadre.setVisible(true);
+        btnCerrarTurno.setVisible(false);//boton para cerrar turno
+        btnImprimeCuadre.setVisible(false);//boton para imprimir cuadre
         lblTurno.setVisible(false);
         loadComboTipo();
         loadComboTipoDocumento();
@@ -162,7 +162,7 @@ public class FormTicket extends javax.swing.JFrame {
         scrambledLabel4 = new javax.swing.JLabel();
         txtCliente = new javax.swing.JTextField();
         txtRUCDNI = new javax.swing.JTextField();
-        txtDireccion = new javax.swing.JTextField();
+        txtDireccionP = new javax.swing.JTextField();
         txtFiltro = new javax.swing.JTextField();
         jcbTipoDocumento = new javax.swing.JComboBox();
         labelTipo1 = new javax.swing.JLabel();
@@ -405,7 +405,7 @@ public class FormTicket extends javax.swing.JFrame {
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addComponent(scrambledLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txtDireccion))
+                                            .addComponent(txtDireccionP))
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                             .addComponent(scrambledLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -413,7 +413,7 @@ public class FormTicket extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(scrambledLabel3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtRUCDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(txtRUCDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(18, 18, 18)
                                 .addComponent(btnUserMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -503,7 +503,7 @@ public class FormTicket extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(scrambledLabel4)
-                                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(txtDireccionP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -887,7 +887,7 @@ public class FormTicket extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(jcbTipoConcepto.getModel().getSize()>0){
             if(jcbTipoMoneda.getSelectedItem().toString().startsWith("-")){
-                JOptionPane.showMessageDialog(null, "POR FAVOR SELECCIONE TIPO DE MONEDA", "DeMaTicket", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "POR FAVOR SELECCIONE TIPO DE MONEDA", "DmPos", JOptionPane.WARNING_MESSAGE);
                 jcbTipoMoneda.requestFocus();
                 //spnCantidad.setValue(0);
                 return;
@@ -909,7 +909,7 @@ public class FormTicket extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "POR FAVOR INGRESE RUC DEL CLIENTE", "DmPos", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if((txtDireccion.getText().trim().equals(""))){
+            if((txtDireccionP.getText().trim().equals(""))){
                 JOptionPane.showMessageDialog(null, "POR FAVOR INGRESE DIRECCIÓN DEL CLIENTE", "DmPos", JOptionPane.WARNING_MESSAGE);
                 return;
             }
@@ -964,7 +964,7 @@ public class FormTicket extends javax.swing.JFrame {
         }else{
             ticket.setNombreCliente(txtCliente.getText().trim().toUpperCase());
             ticket.setIdentificacionCliente(txtRUCDNI.getText().trim());
-            ticket.setDireccionCliente(txtDireccion.getText().trim().toUpperCase());            
+            ticket.setDireccionCliente(txtDireccionP.getText().trim().toUpperCase());            
         }
         ticket.setFecha(SesionData.getSesion().getFechaProceso());
     }
@@ -1176,7 +1176,7 @@ public class FormTicket extends javax.swing.JFrame {
         //jcastillo fin
         txtCliente.setText(CLIENTE_OTROS);
         txtRUCDNI.setText("");
-        txtDireccion.setText("");
+        txtDireccionP.setText("");
         spnCantidad.setValue(0);
         btnImprimir.setEnabled(false);
     }
@@ -1353,7 +1353,7 @@ public class FormTicket extends javax.swing.JFrame {
             
             if(!ventasDAO.insertaCabeceraVentas(ventasCabeceraVO)){
                 resultado="";
-                JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
             }
             //descomentar al momento de pasarlo
 //            if(!ventasDAO.insertaCabeceraOracleVentas(ventasCabeceraVO)){
@@ -1660,15 +1660,15 @@ public class FormTicket extends javax.swing.JFrame {
             }
             if(resultado.equalsIgnoreCase("mysql")){
               resultado="";  
-              JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR EL DETALLE DE LA VENTA", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+              JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR EL DETALLE DE LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
             }
             if(resultado.equalsIgnoreCase("oracle")){
               resultado="";  
-              JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR EL DETALLE DE LA VENTA EN OASIS", "DeMaTicket", JOptionPane.ERROR_MESSAGE);  
+              JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR EL DETALLE DE LA VENTA EN OASIS", "DmPos", JOptionPane.ERROR_MESSAGE);  
             }
             if(resultado.equalsIgnoreCase("updmysql")){
               resultado="";  
-              JOptionPane.showMessageDialog(null, "NO SE PUDO ACTUALIZAR ESTADO DEL DETALLE DE LA VENTA", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+              JOptionPane.showMessageDialog(null, "NO SE PUDO ACTUALIZAR ESTADO DEL DETALLE DE LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
             }
         }catch(Exception ex){
             resultado="";
@@ -1685,13 +1685,13 @@ public class FormTicket extends javax.swing.JFrame {
         logger.fatal("Agregar fatal");
         int cantidad = Integer.parseInt(spnCantidad.getValue().toString().trim());
         if(cantidad <= 0){
-            JOptionPane.showMessageDialog(null, "INGRESAR UNA CANTIDAD VÁLIDA", "DeMaTicket", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "INGRESAR UNA CANTIDAD VÁLIDA", "DmPos", JOptionPane.WARNING_MESSAGE);
             spnCantidad.requestFocus();
             return;
         }
         //verifica si antes de agregar el item fue seleccionado el tipo de moneda
         if(jcbTipoMoneda.getSelectedItem().toString().startsWith("-")){
-            JOptionPane.showMessageDialog(null, "DEBE SELECCIONAR EL TIPO DE MONEDA", "DeMaTicket", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "DEBE SELECCIONAR EL TIPO DE MONEDA", "DmPos", JOptionPane.WARNING_MESSAGE);
             spnCantidad.requestFocus();
             return;  
         }
@@ -1802,10 +1802,10 @@ public class FormTicket extends javax.swing.JFrame {
         int index = jTable1.getSelectedRow();
         if(index<0){
             if(modelo.getRowCount()>0){
-                JOptionPane.showMessageDialog(null, "POR FAVOR, PRIMERO SELECCIONE EL DETALLE QUE DESEA ELIMINAR ", "DeMaTicket",JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "POR FAVOR, PRIMERO SELECCIONE EL DETALLE QUE DESEA ELIMINAR ", "DmPos",JOptionPane.WARNING_MESSAGE);
                 return;
             }else if(modelo.getRowCount()<=0){
-                JOptionPane.showMessageDialog(null, "PRIMERO DEBE INGRESAR UN CONCEPTO DE PAGO ", "DeMaTicket",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "PRIMERO DEBE INGRESAR UN CONCEPTO DE PAGO ", "DmPos",JOptionPane.ERROR_MESSAGE);
                 return;
             }            
         }
@@ -1867,7 +1867,7 @@ public class FormTicket extends javax.swing.JFrame {
             consulta.setString(2, SesionData.getSesion().getTurno());
             ResultSet res = consulta.executeQuery();
             if(!res.next()){
-                JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA CON INFORMACIÓN DE VENTAS PARA LA ACTUAL FECHA DE PROCESO", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA CON INFORMACIÓN DE VENTAS PARA LA ACTUAL FECHA DE PROCESO", "DmPos", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             /*fileCab = Util.validaArchivoTicket(TipoArchivo.DM.getTipo());
@@ -2000,7 +2000,7 @@ public class FormTicket extends javax.swing.JFrame {
         try{
             fileDet = Util.validaArchivoTicket(TipoArchivo.DMD.getTipo());
             if(fileDet==null){
-                JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA CON INFORMACIÓN DEL TURNO", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA CON INFORMACIÓN DEL TURNO", "DmPos", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             File fileRep = Util.validaArchivoTicket(TipoArchivo.XLS.getTipo());
@@ -2115,7 +2115,7 @@ public class FormTicket extends javax.swing.JFrame {
             consulta.setString(1, Util.obtieneFechaDia());
             ResultSet res = consulta.executeQuery();
             if(!res.next()){
-                JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA CON INFORMACIÓN DE VENTAS PARA LA ACTUAL FECHA DE PROCESO", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA CON INFORMACIÓN DE VENTAS PARA LA ACTUAL FECHA DE PROCESO", "DmPos", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
@@ -2210,7 +2210,7 @@ public class FormTicket extends javax.swing.JFrame {
         try{
             fileCab = Util.validaArchivoTicket(TipoArchivo.DM.getTipo());
             if(fileCab==null){
-                JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA CON INFORMACIÓN DEL TURNO", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "NO SE ENCUENTRA CON INFORMACIÓN DEL TURNO", "DmPos", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             int limit = Util.getLimitLine();
@@ -2368,7 +2368,7 @@ public class FormTicket extends javax.swing.JFrame {
             }catch(Exception ex){
                 ex.printStackTrace();
             }
-            JOptionPane.showMessageDialog(null, "TURNO CERRADO CORRECTAMENTE", "DeMaTicket", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "TURNO CERRADO CORRECTAMENTE", "DmPos", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnCerrarTurnoActionPerformed
 
@@ -2382,7 +2382,7 @@ public class FormTicket extends javax.swing.JFrame {
                 VentasDAO ventasDAO = new VentasDAO();            
                 if(ventasDAO.verificaVentasSinProcesar()){
                      JOptionPane.showMessageDialog(null, 
-                            "PRIMERO DEBE DE SINCRONIZAR LAS VENTAS CON OASIS", "DeMaTicket", JOptionPane.INFORMATION_MESSAGE);
+                            "PRIMERO DEBE DE SINCRONIZAR LAS VENTAS CON OASIS", "DmPos", JOptionPane.INFORMATION_MESSAGE);
                      btnSincronizar.requestFocus();
                 }else{
                     System.exit(0); 
@@ -2400,7 +2400,7 @@ public class FormTicket extends javax.swing.JFrame {
             if(cantidad>0){
                 JOptionPane.showMessageDialog(null, 
                         "EN EL TURNO SE REGISTRARON " + cantidad + ", "
-                                + "POR FAVOR CERRAR TURNO ANTES DE CAMBIAR DE DÍA", "DeMaTicket", JOptionPane.INFORMATION_MESSAGE);
+                                + "POR FAVOR CERRAR TURNO ANTES DE CAMBIAR DE DÍA", "DmPos", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 int dialogButton = JOptionPane.showConfirmDialog (null, 
                         "ESTA SEGURO QUE DESEA CAMBIAR DE DÍA"+
@@ -2423,10 +2423,11 @@ public class FormTicket extends javax.swing.JFrame {
         }
         int k = (int) evt.getKeyChar();
         //txtRUCDNI.getText().length() trae el numero de caracteres sin contar el actual, por eso colocamos 7 como nuestro liminite
-        if (txtRUCDNI.getText().length() > 7) {
-            evt.setKeyChar((char) KeyEvent.VK_CLEAR);//Limpiar el caracter ingresado
-            JOptionPane.showMessageDialog(null, "EL DNI DEBE SER DE 8 DIGITOS", "DeMaTicket",JOptionPane.ERROR_MESSAGE);
+        if (txtRUCDNI.getText().length() > 7 && k!=KeyEvent.VK_ENTER) {            
+                evt.setKeyChar((char) KeyEvent.VK_CLEAR);//Limpiar el caracter ingresado
+                JOptionPane.showMessageDialog(null, "EL DNI DEBE SER DE 8 DIGITOS", "DmPos",JOptionPane.ERROR_MESSAGE);                      
         }
+        
     }//GEN-LAST:event_txtRUCDNIKeyTyped
 
     private void txtFiltroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyTyped
@@ -2526,7 +2527,7 @@ public class FormTicket extends javax.swing.JFrame {
                for(VentasCabeceraVO item : cabeceraList){
                     try{
                         if(!ventasDAO.insertaCabeceraOracleVentas(item)){
-                            JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA EN OASIS", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA EN OASIS", "DmPos", JOptionPane.ERROR_MESSAGE);
                             return;
                         }else{
                             ventasDAO.actualizaCabeceraVentas(item);
@@ -2535,7 +2536,7 @@ public class FormTicket extends javax.swing.JFrame {
                                 for(VentasDetalleVO itemdet : detalleList){
                                     try{
                                         if(!ventasDAO.insertaDetalleOracleVentas(item, itemdet)){
-                                            JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR EL DETALLE DE LA VENTA EN OASIS", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+                                            JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR EL DETALLE DE LA VENTA EN OASIS", "DmPos", JOptionPane.ERROR_MESSAGE);
                                             return;
                                         }else{
                                             ventasDAO.actualizaDetalleVentas(itemdet);
@@ -2552,13 +2553,13 @@ public class FormTicket extends javax.swing.JFrame {
                     }
                 } 
             }else{
-                JOptionPane.showMessageDialog(null, "LAS VENTAS YA SE ENCUENTRAN SINCRONIZADAS", "DeMaTicket", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "LAS VENTAS YA SE ENCUENTRAN SINCRONIZADAS", "DmPos", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
          }catch(Exception ex){
              ex.printStackTrace();
          }
-         JOptionPane.showMessageDialog(null, "SINCRONIZACIÓN REALIZADA CORRECTAMENTE", "DeMaTicket", JOptionPane.INFORMATION_MESSAGE);
+         JOptionPane.showMessageDialog(null, "SINCRONIZACIÓN REALIZADA CORRECTAMENTE", "DmPos", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_btnSincronizarActionPerformed
 
@@ -2573,7 +2574,7 @@ public class FormTicket extends javax.swing.JFrame {
                     VentasDAO ventasDAO = new VentasDAO();            
                     if(ventasDAO.verificaVentasSinProcesar()){
                          JOptionPane.showMessageDialog(null, 
-                                "PRIMERO DEBE DE SINCRONIZAR LAS VENTAS CON OASIS", "DeMaTicket", JOptionPane.INFORMATION_MESSAGE);
+                                "PRIMERO DEBE DE SINCRONIZAR LAS VENTAS CON OASIS", "DmPos", JOptionPane.INFORMATION_MESSAGE);
                          btnSincronizar.requestFocus();
                          setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
                     }else{
@@ -2879,9 +2880,9 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JLabel scrambledLabel3;
     private javax.swing.JLabel scrambledLabel4;
     private javax.swing.JSpinner spnCantidad;
-    private javax.swing.JTextField txtCliente;
-    private javax.swing.JTextField txtDireccion;
+    public static javax.swing.JTextField txtCliente;
+    public static javax.swing.JTextField txtDireccionP;
     private javax.swing.JTextField txtFiltro;
-    private javax.swing.JTextField txtRUCDNI;
+    public static javax.swing.JTextField txtRUCDNI;
     // End of variables declaration//GEN-END:variables
 }
