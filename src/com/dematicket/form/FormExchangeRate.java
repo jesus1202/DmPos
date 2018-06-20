@@ -161,7 +161,7 @@ public class FormExchangeRate extends javax.swing.JFrame {
         if(exito){
            JOptionPane.showMessageDialog(null, "TIPO DE CAMBIO GRABADO CORRECTAMENTE", "DmPos", JOptionPane.WARNING_MESSAGE);            
            TipoCambioVO tipoCambioVO = TipoCambioDAO.consultarTipoCambio();
-           lblExchangeRate.setText(tipoCambioVO.getTcompra());
+           lblExchangeRate.setText(tipoCambioVO.getTventa());
            this.setVisible(false);
         }else{
            JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR TIPO DE CAMBIO", "DmPos", JOptionPane.WARNING_MESSAGE); 

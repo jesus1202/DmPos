@@ -26,6 +26,7 @@ import com.dematicket.util.TipoArchivo;
 import com.dematicket.util.Util;
 import java.awt.Desktop;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -91,8 +92,8 @@ public class FormTicket extends javax.swing.JFrame {
         loadFechaToFechaProcesoBD();
         initComponents();
         btnIniciarDia.setVisible(false);
-        btnCerrarTurno.setVisible(false);//boton para cerrar turno
-        btnImprimeCuadre.setVisible(false);//boton para imprimir cuadre
+        btnCerrarTurno.setVisible(true);//boton para cerrar turno
+        btnImprimeCuadre.setVisible(true);//boton para imprimir cuadre
         lblTurno.setVisible(false);
         loadComboTipo();
         loadComboTipoDocumento();
@@ -115,6 +116,8 @@ public class FormTicket extends javax.swing.JFrame {
         
         recuperaTurno(UsuarioData.getUsuario().getEmpresa(), UsuarioData.getUsuario().getTienda(), 
                 UsuarioData.getUsuario().getPtoVenta(),true);
+        
+        jcbTipoMoneda.setSelectedIndex(jcbTipoMoneda.getItemCount()-1);
     }
     
     /**
@@ -849,7 +852,7 @@ public class FormTicket extends javax.swing.JFrame {
         if((jcbTipoMoneda.getSelectedItem()!=null) && !(jcbTipoMoneda.getSelectedItem().toString().startsWith("-"))){       
             String tmoneda="";
             TipoCambioVO tipoCambio = TipoCambioDAO.consultarTipoCambio();
-            BigDecimal tcambio=new BigDecimal(tipoCambio.getTcompra());
+            BigDecimal tcambio=new BigDecimal(tipoCambio.getTventa());
             if(jcbTipoMoneda.getSelectedItem().toString().endsWith("S")){
                 tmoneda="S";
             }else if(jcbTipoMoneda.getSelectedItem().toString().endsWith("D")){
@@ -1268,7 +1271,7 @@ public class FormTicket extends javax.swing.JFrame {
                     
             ventasCabeceraVO.setTIPOVENTA(SesionData.getSesion().getTipoVenta());
             TipoCambioVO tipoCambio = TipoCambioDAO.consultarTipoCambio();
-            BigDecimal tcambio=new BigDecimal(tipoCambio.getTcompra());
+            BigDecimal tcambio=new BigDecimal(tipoCambio.getTventa());
             if(tmoneda.equals("S")){
                 BigDecimal montoSoles= ticket.getTotal().subtract(ticket.getMontoIgv());
                 BigDecimal montoDolares= montoSoles.divide(tcambio, 4, RoundingMode.HALF_UP);
@@ -1562,7 +1565,7 @@ public class FormTicket extends javax.swing.JFrame {
                 tmonedaVenta="D";                    
             }
             TipoCambioVO tipoCambio = TipoCambioDAO.consultarTipoCambio();
-            BigDecimal tcambio=new BigDecimal(tipoCambio.getTcompra());
+            BigDecimal tcambio=new BigDecimal(tipoCambio.getTventa());
             
             for(DetalleTicket temp: ticket.getDetalleTicket()){
                 ventasDetalleVO= new VentasDetalleVO();                
@@ -1697,7 +1700,7 @@ public class FormTicket extends javax.swing.JFrame {
         }
         String tmoneda="";
         TipoCambioVO tipoCambio = TipoCambioDAO.consultarTipoCambio();
-        BigDecimal tcambio=new BigDecimal(tipoCambio.getTcompra());
+        BigDecimal tcambio=new BigDecimal(tipoCambio.getTventa());
         if(jcbTipoMoneda.getSelectedItem().toString().endsWith("S")){
             tmoneda="S";
         }else if(jcbTipoMoneda.getSelectedItem().toString().endsWith("D")){
