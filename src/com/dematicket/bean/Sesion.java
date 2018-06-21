@@ -63,6 +63,7 @@ public class Sesion {
     private String printDestino ="";
     private String codImpuesto ="";
     private String mensajes="";
+    private String tipDocSunat="";
     //jcastillo fin
     public Sesion() {
     }
@@ -441,6 +442,20 @@ public class Sesion {
      */
     public void setCiaid(String ciaid) {
         this.ciaid = ciaid;
+    }
+
+    /**
+     * @return the tipDocSunat
+     */
+    public String getTipDocSunat() {
+        return tipDocSunat;
+    }
+
+    /**
+     * @param tipDocSunat the tipDocSunat to set
+     */
+    public void setTipDocSunat(String tipDocSunat) {
+        this.tipDocSunat = tipDocSunat;
     }
     
 }

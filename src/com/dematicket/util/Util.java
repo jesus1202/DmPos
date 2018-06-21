@@ -30,6 +30,17 @@ public class Util {
     public static String FILE_DELIMITADOR_FELOCAL = ";";
     public static String FILE_DELIMITADOR_NOMBFELOCAL = "_";
     
+    public static String FILE_CAB1_CRISOL = "EN";
+    public static String FILE_CAB2_CRISOL = "DOC";
+    public static String FILE_CAB3_CRISOL = "DN";
+    public static String FILE_CAB4_CRISOL = "DE";
+    public static String FILE_CAB5_CRISOL = "DEDI";
+    public static String FILE_CAB6_CRISOL = "DEDR";
+    public static String FILE_CAB7_CRISOL = "DEIM";
+    public static String FILE_CAB8_CRISOL = "DI";
+    public static String FILE_CAB9_CRISOL = "FP";
+    public static String FILE_CAB10_CRISOL = "PE";
+    
     public static String formatDecimal(double value) {
         DecimalFormat myFormatter = new DecimalFormat("#######0.0000");
         String formato = myFormatter.format(value).replaceAll(",", ".");

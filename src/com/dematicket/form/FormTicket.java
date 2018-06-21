@@ -1081,12 +1081,19 @@ public class FormTicket extends javax.swing.JFrame {
             //jcastilo fin
             /*writeCabecera(fileCab);
             writeDetalle(fileDet);*/            
-            writeCabeceraBD();
-            writeDetalleBD();
+            //writeCabeceraBD();
+            //writeDetalleBD();
             try{
                  //writeFactElec(fileFactElec);                
             }finally{
-                 writeFactElec(fileFactElecLocal);
+                switch(UsuarioData.getUsuario().getEmpresa()){
+                    case "1": writeFactElec(fileFactElecLocal);
+                              break;
+                        
+                    case "2": writeFactElecCrisol(fileFactElecLocal);
+                              break;
+                }
+                //writeFactElec(fileFactElecLocal);
             }    
             
             /*if(writeCabeceraBD().equalsIgnoreCase("ok")){
@@ -1374,7 +1381,193 @@ public class FormTicket extends javax.swing.JFrame {
         return resultado;
     }
     //jcastillo inicio
-    private void writeFactElec(File file) throws IOException{
+    private void writeFactElecCrisol(File file) throws IOException{
+        FileWriter escribir = null;
+        String mensajes[]=null;
+        try{
+            escribir = new FileWriter(file, true);
+            int i=1;
+                // cabecera del archivo
+                escribir.write(Util.FILE_CAB1_CRISOL);//0
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getTipoDocumento());
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(ticket.getSerie()+"-"+Util.completarIzquierda(8, ""+ticket.getNumero(), "0"));
+                for(int z=0; z<4;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getFechaProceso().replaceAll("/", "-"));
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write((SesionData.getSesion().getTipoMoneda().equals("S")?"PEN":"USD"));
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("20501457869");//ruc crisol
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("6");//
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("CRISOL");//nombre crisol
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("LIBRERIAS CRISOL S.A.C.");//razon social
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("150140");//ubigeo crisol
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("AV. EL DERBY 254 OF. 2002");//direccion fiscal
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("LIMA");//
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("LIMA");//
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("SANTIAGO DE SURCO");//
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                if(txtCliente.getText().equalsIgnoreCase("otros")){
+                    escribir.write(Util.FILE_DELIMITADOR);//0
+                    escribir.write(Util.FILE_DELIMITADOR);//0
+                }else{
+                     escribir.write((ticket.getIdentificacionCliente().trim().compareTo("")==0?"":ticket.getIdentificacionCliente()));
+                     escribir.write(Util.FILE_DELIMITADOR);//0
+                     escribir.write(SesionData.getSesion().getTipDocSunat());//
+                     escribir.write(Util.FILE_DELIMITADOR);//0
+                }
+                escribir.write(ticket.getNombreCliente().trim().compareTo("")==0?"":ticket.getNombreCliente());
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(txtDireccionP.getText());
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                //bdTest = bdTest.setScale(2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal monto1 = (BigDecimal) (ticket.getMontoIgv()==BigDecimal.ZERO?0:ticket.getTotal().subtract(ticket.getMontoIgv()));
+                monto1=monto1.setScale(2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal monto2 = (BigDecimal) ticket.getMontoIgv();
+                monto2=monto2.setScale(2, BigDecimal.ROUND_HALF_UP);
+                escribir.write(monto1+Util.FILE_DELIMITADOR+monto2);
+                for(int z=0; z<3;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                
+                BigDecimal montot =ticket.getTotal();
+                montot=montot.setScale(2, BigDecimal.ROUND_HALF_UP);
+                if(ticket.getMontoGravado().compareTo(BigDecimal.ZERO) > 0){
+                    escribir.write(montot+Util.FILE_DELIMITADOR+"1001");
+                }else{
+                    escribir.write(montot+Util.FILE_DELIMITADOR+"1003");
+                }                
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write(monto1+Util.FILE_DELIMITADOR);
+                escribir.write((ticket.getIdentificacionCliente().trim().compareTo("")==0?"":ticket.getIdentificacionCliente()));
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write(SesionData.getSesion().getTipDocSunat());//falta corregir es el tipo de documento osea dni
+                for(int z=0; z<33;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("01");
+                escribir.write(Util.FILE_DELIMITADOR+"\n");
+                
+                //cabecera 2
+                escribir.write(Util.FILE_CAB2_CRISOL);
+                if(ticket.getMontoGravado().compareTo(BigDecimal.ZERO) > 0){
+                    escribir.write(Util.FILE_DELIMITADOR+"1001"+Util.FILE_DELIMITADOR+monto1);
+                }else{
+                    escribir.write(Util.FILE_DELIMITADOR+"1003"+Util.FILE_DELIMITADOR+monto1);
+                }   
+                for(int z=0; z<2;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("\n");
+                
+                
+                //cabecera 3
+                escribir.write(Util.FILE_CAB3_CRISOL);
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("1");
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("1000");
+                escribir.write(Util.FILE_DELIMITADOR);
+                String[] numeroToLetras = NumberToLetterConverter.convertNumberToLetter(ticket.getTotal().doubleValue()).split(":");
+                escribir.write(numeroToLetras[1].substring(1));
+                escribir.write(Util.FILE_DELIMITADOR+"\n");
+                
+                
+                //cabecera 4
+                BigDecimal divisorIGV = BigDecimal.ONE.add(SesionData.getSesion().getIgvPorcentaje().divide(new BigDecimal(100)));
+
+                for(DetalleTicket temp: ticket.getDetalleTicket()){
+                    escribir.write(Util.FILE_CAB4_CRISOL);
+                    escribir.write(Util.FILE_DELIMITADOR+i+Util.FILE_DELIMITADOR);
+                    BigDecimal montoCab4 =temp.getConceptoCobro().getPrecioUnitario();
+                    montoCab4=montoCab4.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(montoCab4+Util.FILE_DELIMITADOR);
+                    escribir.write((temp.getConceptoCobro().getUnimed().equals("UND")?"NIU":"-"));
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(temp.getCantidad()+Util.FILE_DELIMITADOR);
+                   
+                    escribir.write((temp.getMontoIgv().compareTo(BigDecimal.ZERO)==0?temp.getConceptoCobro().getPrecioUnitario():((temp.getConceptoCobro().getPrecioUnitario()).divide(divisorIGV,2, RoundingMode.HALF_UP)))+Util.FILE_DELIMITADOR);
+                    escribir.write(temp.getConceptoCobro().getTipo());
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("01");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(montoCab4+Util.FILE_DELIMITADOR);
+                    escribir.write(montoCab4+Util.FILE_DELIMITADOR+"\n");
+                    //cabecera 5
+                    escribir.write(Util.FILE_CAB5_CRISOL);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(temp.getConceptoCobro().getConcepto());
+                    escribir.write(Util.FILE_DELIMITADOR+"\n");
+                    //cabecera 6
+                    escribir.write(Util.FILE_CAB6_CRISOL);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("FALSE");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    BigDecimal montoCab6 = BigDecimal.ZERO;
+                    montoCab6=montoCab6.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(montoCab6+"\n");
+                    //cabecera 7
+                    escribir.write(Util.FILE_CAB7_CRISOL);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    BigDecimal montoIgv = temp.getMontoIgv();
+                    montoIgv= montoIgv.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(montoIgv+Util.FILE_DELIMITADOR);                    
+                    BigDecimal montoItem =(temp.getMontoIgv().compareTo(BigDecimal.ZERO)==0?temp.getSubtotal():(temp.getSubtotal()).subtract(temp.getMontoIgv()));
+                    montoItem= montoItem.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(montoItem+Util.FILE_DELIMITADOR);
+                    escribir.write(montoIgv+Util.FILE_DELIMITADOR);
+                    BigDecimal porcIGV= SesionData.getSesion().getIgvPorcentaje();
+                    porcIGV= porcIGV.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(porcIGV+Util.FILE_DELIMITADOR);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("10");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("100");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("IGV");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("VAT");
+                    escribir.write(Util.FILE_DELIMITADOR+"\n");
+                    i++;
+                    
+                }
+                //cabecera 8
+                escribir.write(Util.FILE_CAB8_CRISOL);
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write(monto2+Util.FILE_DELIMITADOR+monto2+Util.FILE_DELIMITADOR);
+                escribir.write("100");
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("IGV");
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("VAT");
+                escribir.write(Util.FILE_DELIMITADOR+"\n");
+                
+                //cabecera 9
+                escribir.write(Util.FILE_CAB9_CRISOL);
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("01");//forma de pago
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write(SesionData.getSesion().getFechaProceso().replaceAll("/", "-")+"\n");
+                
+                //cabecera 10
+                escribir.write(Util.FILE_CAB10_CRISOL);
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("CodEstSUNAT");
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("0001 \n");
+               
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }finally{
+            escribir.close();
+        }
+    }
+    //jcastillo fin
+       private void writeFactElec(File file) throws IOException{
         FileWriter escribir = null;
         String mensajes[]=null;
         try{
@@ -1515,7 +1708,9 @@ public class FormTicket extends javax.swing.JFrame {
             escribir.close();
         }
     }
-    //jcastillo fin
+    
+    
+    
     private void writeDetalle(File file) throws IOException{
         FileWriter escribir = null;
         try{
@@ -2433,9 +2628,11 @@ public class FormTicket extends javax.swing.JFrame {
             ClienteVO clienteVO = ClienteData.getClientexNumDoc(txtRUCDNI.getText());
             if(clienteVO!=null){
                  txtCliente.setText(clienteVO.getCLIENOM());
-                 txtDireccionP.setText(clienteVO.getCLIEDIR());                 
+                 txtDireccionP.setText(clienteVO.getCLIEDIR());    
+                 SesionData.getSesion().setTipDocSunat(clienteVO.getDocsunat());
             }else{
                 txtCliente.setText("OTROS");
+                SesionData.getSesion().setTipDocSunat("1");
                 txtDireccionP.setText("");
                 btnUserMaintenance.setFocusPainted(true);
                 JOptionPane.showMessageDialog(null, "CLIENTE NO REGISTRADO, POR FAVOR INGRESARLO DATOS DEL CLIENTE", "DmPos",JOptionPane.ERROR_MESSAGE);
@@ -2628,6 +2825,7 @@ public class FormTicket extends javax.swing.JFrame {
             ArrayList<DetalleTicket> listaDetalles = ticket.getDetalleTicket();
             ConceptoCobro concepto= null;
             if(jcbTipoMoneda.getSelectedItem().toString().startsWith("Dolar")){
+                SesionData.getSesion().setTipoMoneda("D");
                 lblExchangeRate.setText(tipoCambio.getTventa());
                 if(modelo!=null){
                     if(modelo.getRowCount()>0){
@@ -2667,6 +2865,7 @@ public class FormTicket extends javax.swing.JFrame {
                 }
                 //btnExchangeRate.setEnabled(true);            
             }else{
+                SesionData.getSesion().setTipoMoneda("S");
                 lblExchangeRate.setText(tipoCambio.getTventa());
                 if(modelo!=null){
                     if(modelo.getRowCount()>0){
