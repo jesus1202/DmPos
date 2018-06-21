@@ -244,7 +244,7 @@ public class FormLogin extends JFrame{
             maestroVentasVO =MaestroVentasData.getMaeVentasBD();
             
             CompaniaVO companiaVO;
-            companiaVO = CompaniaData.getCompaniaBD();
+            companiaVO = CompaniaData.getCompaniaBD(UsuarioData.getUsuario().getEmpresa());
             
             ClienteVO clienteVO;
             clienteVO = ClienteData.getClienteBD();

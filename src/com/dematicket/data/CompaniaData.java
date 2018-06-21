@@ -15,9 +15,9 @@ import com.dematicket.bean.CompaniaVO;
 public class CompaniaData {
     static CompaniaVO companiaVO;
     
-    public static CompaniaVO getCompaniaBD(){
+    public static CompaniaVO getCompaniaBD(String ciaid){
         CompaniaDAO miCompaniaDAO = new CompaniaDAO();
-        companiaVO = miCompaniaDAO.consultarCompania();
+        companiaVO = miCompaniaDAO.consultarCompania(ciaid);
       return companiaVO;
     }
 }

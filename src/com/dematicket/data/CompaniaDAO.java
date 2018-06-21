@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
 public class CompaniaDAO {
   CompaniaVO compania;
   
-  public CompaniaVO consultarCompania() {
+  public CompaniaVO consultarCompania(String ciaid) {
   
   DbConnection conex= new DbConnection();
      
@@ -27,7 +27,12 @@ public class CompaniaDAO {
    PreparedStatement consulta = conex.getConnection().prepareStatement("SELECT IDCOMPANIA,COMPANIA,DIRECCIONCOMPANIA,"
            + "FILESCOPY,RUCDERRAMA,NOMBDERRAMA,DIRECDERRAMA,UBGDERRAMA,PRVDERRAMA,DEPDERRAMA,DSTDERRAMA,PAIS "
            + "FROM DMTICKET.DMT_COMPANIA_MAE WHERE IDCOMPANIA =?");
-   consulta.setString(1, "08");
+   if(ciaid.equals("1")){
+       consulta.setString(1, "08");
+   }else{
+       consulta.setString(1, ciaid);
+   }
+   //consulta.setString(1, "08");
    
    ResultSet res = consulta.executeQuery();
     

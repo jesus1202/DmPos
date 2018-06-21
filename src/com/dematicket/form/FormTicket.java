@@ -1081,8 +1081,8 @@ public class FormTicket extends javax.swing.JFrame {
             //jcastilo fin
             /*writeCabecera(fileCab);
             writeDetalle(fileDet);*/            
-            //writeCabeceraBD();
-            //writeDetalleBD();
+            writeCabeceraBD();
+            writeDetalleBD();
             try{
                  //writeFactElec(fileFactElec);                
             }finally{
@@ -1398,23 +1398,23 @@ public class FormTicket extends javax.swing.JFrame {
                 escribir.write(Util.FILE_DELIMITADOR);//0
                 escribir.write((SesionData.getSesion().getTipoMoneda().equals("S")?"PEN":"USD"));
                 escribir.write(Util.FILE_DELIMITADOR);//0
-                escribir.write("20501457869");//ruc crisol
+                escribir.write(SesionData.getSesion().getRucDerrama());//ruc crisol
                 escribir.write(Util.FILE_DELIMITADOR);//0
                 escribir.write("6");//
                 escribir.write(Util.FILE_DELIMITADOR);//0
-                escribir.write("CRISOL");//nombre crisol
+                escribir.write(SesionData.getSesion().getCompania());//nombre crisol
                 escribir.write(Util.FILE_DELIMITADOR);//0
-                escribir.write("LIBRERIAS CRISOL S.A.C.");//razon social
+                escribir.write(SesionData.getSesion().getNombDerrama());//razon social
                 escribir.write(Util.FILE_DELIMITADOR);//0
-                escribir.write("150140");//ubigeo crisol
+                escribir.write(SesionData.getSesion().getUbgDerrama());//ubigeo crisol
                 escribir.write(Util.FILE_DELIMITADOR);//0
-                escribir.write("AV. EL DERBY 254 OF. 2002");//direccion fiscal
+                escribir.write(SesionData.getSesion().getDirecDerrama());//direccion fiscal
                 escribir.write(Util.FILE_DELIMITADOR);//0
-                escribir.write("LIMA");//
+                escribir.write(SesionData.getSesion().getPrvDerrama());//
                 escribir.write(Util.FILE_DELIMITADOR);//0
-                escribir.write("LIMA");//
+                escribir.write(SesionData.getSesion().getDepDerrama());//
                 escribir.write(Util.FILE_DELIMITADOR);//0
-                escribir.write("SANTIAGO DE SURCO");//
+                escribir.write(SesionData.getSesion().getDstDerrama());//
                 escribir.write(Util.FILE_DELIMITADOR);//0
                 if(txtCliente.getText().equalsIgnoreCase("otros")){
                     escribir.write(Util.FILE_DELIMITADOR);//0
