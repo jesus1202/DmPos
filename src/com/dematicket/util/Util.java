@@ -370,5 +370,21 @@ public class Util {
         }
         return cantidad;
     }
+    public static boolean validaCaracter(Character c) {
+    int x=0;
+    char Alfab[]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t','u','v','w','x','y','z',
+    'A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+    '1','2','3','4','5','6','7','8','9','0'};
+    int longitud = Alfab.length;
+    for (int i = 0; i<longitud; i++) {
+        if(c!=(Alfab[i])){ /*aqui evaluo si elcaratér tipeado es distinto a los caracteres válidos*/
+        x++;
+        }
+    }
+    if(x < longitud){
+        return true;
+    }    
+        return false;
+    }
    
 }

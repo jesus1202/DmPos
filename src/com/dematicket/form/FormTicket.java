@@ -2639,7 +2639,7 @@ public class FormTicket extends javax.swing.JFrame {
 //            }
 //        }
         char kc = (char) evt.getKeyChar();
-        if(validaCaracter(kc)== false){
+        if(Util.validaCaracter(kc)== false){
             Toolkit.getDefaultToolkit().beep();
             evt.consume();
         }
@@ -2667,23 +2667,6 @@ public class FormTicket extends javax.swing.JFrame {
         
     }//GEN-LAST:event_txtRUCDNIKeyTyped
 
-    public static boolean validaCaracter(Character c) {
-    int x=0;
-    char Alfab[]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t','u','v','w','x','y','z',
-    'A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V','W','X','Y','Z',
-    '1','2','3','4','5','6','7','8','9','0'};
-    int longitud = Alfab.length;
-    for (int i = 0; i<longitud; i++) {
-        if(c!=(Alfab[i])){ /*aqui evaluo si elcaratér tipeado es distinto a los caracteres válidos*/
-        x++;
-        }
-    }
-    if(x < longitud){
-        return true;
-    }
-    
-    return false;
-    }
     private void txtFiltroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyTyped
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFiltroKeyTyped
