@@ -15,6 +15,8 @@ import com.dematicket.data.TClienteDAO;
 import static com.dematicket.form.FormTicket.txtCliente;
 import static com.dematicket.form.FormTicket.txtRUCDNI;
 import static com.dematicket.form.FormTicket.txtDireccionP;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,7 +91,7 @@ public class FormUserMaintainer extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         btnBuscar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
-        txtNumDocumentoBuscar = new javax.swing.JFormattedTextField();
+        txtNumDocumentoBuscar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -202,8 +204,7 @@ public class FormUserMaintainer extends javax.swing.JFrame {
                                         .addGap(158, 158, 158)
                                         .addComponent(jLabel18)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jcbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(97, 97, 97))))
+                                        .addComponent(jcbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel13)
@@ -343,11 +344,11 @@ public class FormUserMaintainer extends javax.swing.JFrame {
             }
         });
 
-        try {
-            txtNumDocumentoBuscar.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("########")));
-        } catch (java.text.ParseException ex) {
-            ex.printStackTrace();
-        }
+        txtNumDocumentoBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNumDocumentoBuscarKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -356,11 +357,11 @@ public class FormUserMaintainer extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(55, 55, 55)
                 .addComponent(jLabel17)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtNumDocumentoBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66)
-                .addComponent(btnBuscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnBuscar)
+                .addGap(82, 82, 82)
                 .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63))
         );
@@ -551,6 +552,56 @@ public class FormUserMaintainer extends javax.swing.JFrame {
         jcbEstado.setEnabled(false);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
+    private void txtNumDocumentoBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNumDocumentoBuscarKeyTyped
+        // TODO add your handling code here:
+        //if(Character.isDigit(evt.getKeyChar()) && !Character.isISOControl(evt.getKeyChar())){
+//        if(Character.isISOControl(evt.getKeyChar())){
+//            Toolkit.getDefaultToolkit().beep();
+//            evt.consume();
+//        }
+//        int k = (int) evt.getKeyChar();
+//        //txtRUCDNI.getText().length() trae el numero de caracteres sin contar el actual, por eso colocamos 7 como nuestro liminite
+//        if (txtNumDocumentoBuscar.getText().length() > 14 && (k!=KeyEvent.VK_ENTER || k!=KeyEvent.VK_ESCAPE)) {            
+//                evt.setKeyChar((char) KeyEvent.VK_CLEAR);//Limpiar el caracter ingresado
+//                String ingreso = txtNumDocumentoBuscar.getText();
+//                txtNumDocumentoBuscar.setText(ingreso.substring(0, txtNumDocumentoBuscar.getText().length()-1));
+//                JOptionPane.showMessageDialog(null, "EL MAXIMO DE CARACTERES PERMITOS ES 15", "DmPos",JOptionPane.ERROR_MESSAGE);                      
+//        }
+        char kc = (char) evt.getKeyChar();
+        if(validaCaracter(kc)== false){
+            Toolkit.getDefaultToolkit().beep();
+            evt.consume();
+        }
+        int k = (int) evt.getKeyChar();
+        //txtRUCDNI.getText().length() trae el numero de caracteres sin contar el actual, por eso colocamos 7 como nuestro liminite
+        if (txtNumDocumentoBuscar.getText().length() > 14 && k!=KeyEvent.VK_ENTER) {            
+                
+                if(k!=KeyEvent.VK_ESCAPE){
+                    evt.setKeyChar((char) KeyEvent.VK_CLEAR);//Limpiar el caracter ingresado
+                    JOptionPane.showMessageDialog(null, "EL MAXIMO DE CARACTERES PERMITOS ES 15", "DmPos",JOptionPane.ERROR_MESSAGE);                                                     
+                }
+                
+        }
+    }//GEN-LAST:event_txtNumDocumentoBuscarKeyTyped
+
+    public static boolean validaCaracter(Character c) {
+    int x=0;
+    char Alfab[]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t','u','v','w','x','y','z',
+    'A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+    '1','2','3','4','5','6','7','8','9','0'};
+    int longitud = Alfab.length;
+    for (int i = 0; i<longitud; i++) {
+        if(c!=(Alfab[i])){ /*aqui evaluo si elcaratér tipeado es distinto a los caracteres válidos*/
+        x++;
+        }
+    }
+    if(x < longitud){
+        return true;
+    }
+    
+    return false;
+    }
+    
     private void cargarComboProvincia(String codigoDepartamento){
         jcbProv.removeAllItems();
         for(ProvinciaVO temp: ProvinciaDAO.consultarProvxDepa(codigoDepartamento)){
@@ -573,6 +624,7 @@ public class FormUserMaintainer extends javax.swing.JFrame {
         loadComboDepartamento();
         loadComboTipoCliente();
         loadComboDocSunat();
+        txtNumDocumentoBuscar.setText("");
         //this.setIconImage(new ImageIcon(path+"logowindow.png").getImage());         
         
     }
@@ -1035,7 +1087,7 @@ public class FormUserMaintainer extends javax.swing.JFrame {
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtNombres;
     private javax.swing.JTextField txtNumDocu;
-    private javax.swing.JFormattedTextField txtNumDocumentoBuscar;
+    private javax.swing.JTextField txtNumDocumentoBuscar;
     private javax.swing.JTextField txtTelefono1;
     private javax.swing.JTextField txtTelefono2;
     // End of variables declaration//GEN-END:variables

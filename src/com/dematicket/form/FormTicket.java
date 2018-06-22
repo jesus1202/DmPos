@@ -2615,17 +2615,43 @@ public class FormTicket extends javax.swing.JFrame {
 //jcastillo inicio
     private void txtRUCDNIKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRUCDNIKeyTyped
         // TODO add your handling code here:
-        if(!Character.isDigit(evt.getKeyChar()) && !Character.isISOControl(evt.getKeyChar())){
+//        if(!Character.isDigit(evt.getKeyChar()) && !Character.isISOControl(evt.getKeyChar())){
+//            Toolkit.getDefaultToolkit().beep();
+//            evt.consume();
+//        }
+//        int k = (int) evt.getKeyChar();
+//        //txtRUCDNI.getText().length() trae el numero de caracteres sin contar el actual, por eso colocamos 7 como nuestro liminite
+//        if (txtRUCDNI.getText().length() > 14 && k!=KeyEvent.VK_ENTER) {            
+//                evt.setKeyChar((char) KeyEvent.VK_CLEAR);//Limpiar el caracter ingresado
+//                JOptionPane.showMessageDialog(null, "EL MAXIMO DE CARACTERES PERMITOS ES 15", "DmPos",JOptionPane.ERROR_MESSAGE);                      
+//        }else if(txtRUCDNI.getText().length() == 8 && k == KeyEvent.VK_ENTER){
+//            ClienteVO clienteVO = ClienteData.getClientexNumDoc(txtRUCDNI.getText());
+//            if(clienteVO!=null){
+//                 txtCliente.setText(clienteVO.getCLIENOM());
+//                 txtDireccionP.setText(clienteVO.getCLIEDIR());    
+//                 SesionData.getSesion().setTipDocSunat(clienteVO.getDocsunat());
+//            }else{
+//                txtCliente.setText("OTROS");
+//                SesionData.getSesion().setTipDocSunat("1");
+//                txtDireccionP.setText("");
+//                btnUserMaintenance.setFocusPainted(true);
+//                JOptionPane.showMessageDialog(null, "CLIENTE NO REGISTRADO, POR FAVOR INGRESARLO DATOS DEL CLIENTE", "DmPos",JOptionPane.ERROR_MESSAGE);
+//            }
+//        }
+        char kc = (char) evt.getKeyChar();
+        if(validaCaracter(kc)== false){
             Toolkit.getDefaultToolkit().beep();
             evt.consume();
         }
         int k = (int) evt.getKeyChar();
         //txtRUCDNI.getText().length() trae el numero de caracteres sin contar el actual, por eso colocamos 7 como nuestro liminite
-        if (txtRUCDNI.getText().length() > 7 && k!=KeyEvent.VK_ENTER) {            
-                evt.setKeyChar((char) KeyEvent.VK_CLEAR);//Limpiar el caracter ingresado
-                JOptionPane.showMessageDialog(null, "EL DNI DEBE SER DE 8 DIGITOS", "DmPos",JOptionPane.ERROR_MESSAGE);                      
-        }else if(txtRUCDNI.getText().length() == 8 && k == KeyEvent.VK_ENTER){
-            ClienteVO clienteVO = ClienteData.getClientexNumDoc(txtRUCDNI.getText());
+        if (txtRUCDNI.getText().length() > 14 && k!=KeyEvent.VK_ENTER) {  
+                if(k!=KeyEvent.VK_ESCAPE){
+                    evt.setKeyChar((char) KeyEvent.VK_CLEAR);//Limpiar el caracter ingresado
+                    JOptionPane.showMessageDialog(null, "EL MAXIMO DE CARACTERES PERMITOS ES 15", "DmPos",JOptionPane.ERROR_MESSAGE);                                                     
+                }
+        }else if(k == KeyEvent.VK_ENTER){
+             ClienteVO clienteVO = ClienteData.getClientexNumDoc(txtRUCDNI.getText());
             if(clienteVO!=null){
                  txtCliente.setText(clienteVO.getCLIENOM());
                  txtDireccionP.setText(clienteVO.getCLIEDIR());    
@@ -2641,6 +2667,23 @@ public class FormTicket extends javax.swing.JFrame {
         
     }//GEN-LAST:event_txtRUCDNIKeyTyped
 
+    public static boolean validaCaracter(Character c) {
+    int x=0;
+    char Alfab[]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t','u','v','w','x','y','z',
+    'A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+    '1','2','3','4','5','6','7','8','9','0'};
+    int longitud = Alfab.length;
+    for (int i = 0; i<longitud; i++) {
+        if(c!=(Alfab[i])){ /*aqui evaluo si elcaratér tipeado es distinto a los caracteres válidos*/
+        x++;
+        }
+    }
+    if(x < longitud){
+        return true;
+    }
+    
+    return false;
+    }
     private void txtFiltroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyTyped
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFiltroKeyTyped
