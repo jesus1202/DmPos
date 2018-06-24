@@ -10,8 +10,11 @@ import com.dematicket.data.SesionData;
 import com.dematicket.data.UsuarioData;
 import com.dematicket.data.VentasDAO;
 import static com.dematicket.form.FormTicket.jcbTipoDocumento;
+import static com.dematicket.form.FormTicket.txtCliente;
+import static com.dematicket.form.FormTicket.txtDireccionP;
 import com.dematicket.print.DirectPrinterT88V;
 import com.dematicket.util.DbConnection;
+import com.dematicket.util.NumberToLetterConverter;
 import com.dematicket.util.TipoArchivo;
 import com.dematicket.util.Util;
 import java.io.BufferedReader;
@@ -19,6 +22,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -502,6 +507,12 @@ public class FormAnulacion extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "EL DOCUMENTO NO EXISTE O SE ENCUENTRA ANULADO", "DmPos",JOptionPane.WARNING_MESSAGE);
             return;
         }
+        if(ventasCabeceraVO.getFLAGNC() != null){
+            VentasCabeceraVO ventasCabeceraVO2 = buscaDatosNC(tipo,UsuarioData.getUsuario().getEmpresa());
+            String concatenado= ventasCabeceraVO2.getSERIE()+" - "+ventasCabeceraVO2.getNUMERO();
+            JOptionPane.showMessageDialog(null, "EL DOCUMENTO YA ESTA ASOCIADO A LA NOTA DE CRÉDITO "+concatenado, "DmPos",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         ventasDetalleVOList = buscaDetalleBD(esNotaCredito);
         for(VentasDetalleVO temp:ventasDetalleVOList){
             Object [] object = new Object[]{
@@ -519,6 +530,22 @@ public class FormAnulacion extends javax.swing.JFrame {
         //jcastillo fin
     }//GEN-LAST:event_btnBuscarActionPerformed
   
+    private void aumentaSerieNumero(){
+        try{
+            String valor =jcbTipoDocumento1.getSelectedItem().toString();            
+            String valorSeleccionado[] = valor.split(" - ");
+            VentasDAO ventasDAO = new VentasDAO();
+            if(ventasDAO.aumentaSerieNumero(valorSeleccionado[0], SesionData.getSesion().getNumero(),UsuarioData.getUsuario().getEmpresa(),UsuarioData.getUsuario().getTienda(),UsuarioData.getUsuario().getPtoVenta())){
+               SesionData.getSesion().setSerie(SesionData.getSesion().getSerie());
+               SesionData.getSesion().setNumero(SesionData.getSesion().getNumero()+1);
+            }else{
+                JOptionPane.showMessageDialog(null, "NO SE PUDO GENERAR NUEVO NUMERO DE SERIE", "DmPos", JOptionPane.ERROR_MESSAGE);
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
     private String buscaCabecera(){
         File fileCab = null;
         String impresion = "";
@@ -571,6 +598,7 @@ public class FormAnulacion extends javax.swing.JFrame {
             consulta.setString(4, compania);
             consulta.setString(5, documento);
             ResultSet res = consulta.executeQuery();
+            
             if(res.next()){
                 ventasCabeceraVO = new VentasCabeceraVO();
                 ventasCabeceraVO.setIDCOMPANIA(res.getString("IDCOMPANIA"));
@@ -645,6 +673,35 @@ public class FormAnulacion extends javax.swing.JFrame {
                 ventasCabeceraVO.setFACMTOEXO(res.getBigDecimal("FACMTOEXO"));
                 ventasCabeceraVO.setFACMTOINA(res.getBigDecimal("FACMTOINA"));
                 ventasCabeceraVO.setFACMTOGRAT(res.getBigDecimal("FACMTOGRAT"));
+            }
+            res.close();
+            consulta.close();
+            conex.desconectar();
+        }catch(Exception ex){
+            conex.desconectar();
+            ex.printStackTrace();
+        }
+        return ventasCabeceraVO;
+    }
+    
+    private VentasCabeceraVO buscaDatosNC(String documento, String compania){
+        DbConnection conex= new DbConnection();
+        VentasCabeceraVO ventasCabeceraVO = null;
+        try{
+            PreparedStatement consulta = conex.getConnection().prepareStatement("SELECT SERIE,NUMERO " +
+                "FROM DMTICKET.DMT_VENTAS_CAB WHERE SERIE_REF=? AND NUMERO_REF=? AND FACESTADO=? AND IDCOMPANIA=? AND TIPODOC_REF=?");
+            consulta.setString(1, txtSerie.getText().trim());
+            consulta.setInt(2, Integer.parseInt(txtNumero.getText().trim()));
+            consulta.setString(3, "ACEPTADO");
+            consulta.setString(4, compania);
+            consulta.setString(5, documento);
+            ResultSet res = consulta.executeQuery();
+            
+            if(res.next()){
+                ventasCabeceraVO = new VentasCabeceraVO();
+                
+                ventasCabeceraVO.setSERIE(res.getString("SERIE"));
+                ventasCabeceraVO.setNUMERO(res.getString("NUMERO"));                
             }
             res.close();
             consulta.close();
@@ -1032,6 +1089,11 @@ public class FormAnulacion extends javax.swing.JFrame {
                 if(!resultado1.equals("ok") || !resultado2.equals("ok")){
                     JOptionPane.showMessageDialog(null, "NO SE PUDO PROCESO LA NOTA DE CRÉDITO", "DmPos",JOptionPane.ERROR_MESSAGE);
                 }else{
+                    File fileFactElecLocal = Util.validaArchivoTicket(TipoArchivo.TXTLocal.getTipo());
+                    writeFactElecCrisol(fileFactElecLocal,ventasDetalleVOList,ventasCabeceraVO);
+                    
+                    
+                    aumentaSerieNumero();
                     Limpiar();
                     JOptionPane.showMessageDialog(null, "NOTA DE CRÉDITO PROCESADA CORRECTAMENTE", "DmPos",JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -1053,14 +1115,229 @@ public class FormAnulacion extends javax.swing.JFrame {
                 Limpiar();
                 JOptionPane.showMessageDialog(null, "NO SE PUEDE REIMPRIMIR EL DOCUMENTO, CONTACTE AL ADMINISTRADOR", "DmPos",JOptionPane.ERROR_MESSAGE);
             }     
-        }
-        
-        
-           
+        }  
        }catch(Exception ex){
             ex.printStackTrace();
         }
     }//GEN-LAST:event_btnImprimirActionPerformed
+    
+    private void writeFactElecCrisol(File file,ArrayList<VentasDetalleVO> ventasDetalleVOList,VentasCabeceraVO ventasCabeceraVO ) throws IOException{
+        FileWriter escribir = null;
+        String mensajes[]=null;
+        try{
+            escribir = new FileWriter(file, true);
+            int i=1;
+                // cabecera del archivo
+                escribir.write(Util.FILE_CAB1_CRISOL);//0
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(ventasCabeceraVO.getTIPODOCUMENTO());
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(ventasCabeceraVO.getSERIE()+"-"+Util.completarIzquierda(8, ""+ventasCabeceraVO.getNUMERO(), "0"));
+                for(int z=0; z<4;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getFechaProceso().replaceAll("/", "-"));
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write((ventasCabeceraVO.getTIPOMONEDA().equals("S")?"PEN":"USD"));
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getRucDerrama());//ruc crisol
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("6");//
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getCompania());//nombre crisol
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getNombDerrama());//razon social
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getUbgDerrama());//ubigeo crisol
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getDirecDerrama());//direccion fiscal
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getPrvDerrama());//
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getDepDerrama());//
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(SesionData.getSesion().getDstDerrama());//
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                if(txtCliente.getText().equalsIgnoreCase("otros")){
+                    escribir.write(Util.FILE_DELIMITADOR);//0
+                    escribir.write(Util.FILE_DELIMITADOR);//0
+                }else{
+                     escribir.write((ventasCabeceraVO.getCLIERUC().trim().compareTo("")==0?"":ventasCabeceraVO.getCLIERUC()));
+                     escribir.write(Util.FILE_DELIMITADOR);//0
+                     escribir.write(SesionData.getSesion().getTipDocSunat());//
+                     escribir.write(Util.FILE_DELIMITADOR);//0
+                }
+                escribir.write(txtCliente.getText().trim().compareTo("")==0?"":txtCliente.getText());
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write(txtDireccionP.getText());
+                escribir.write(Util.FILE_DELIMITADOR);//0
+                //bdTest = bdTest.setScale(2, BigDecimal.ROUND_HALF_UP);
+                BigDecimal monto1 = BigDecimal.ZERO;
+                BigDecimal monto2 = BigDecimal.ZERO;
+                BigDecimal montot = BigDecimal.ZERO;
+                if(ventasCabeceraVO.getTIPOMONEDA().equals("S")){
+                    monto1 = (BigDecimal) (ventasCabeceraVO.getFACIGVMO()==BigDecimal.ZERO?0: ventasCabeceraVO.getFACTOTMO().subtract(ventasCabeceraVO.getFACIGVMO()));
+                    monto2 = (BigDecimal) ventasCabeceraVO.getFACIGVMO();
+                    montot =ventasCabeceraVO.getFACTOTMO();
+                    
+                }else{
+                    monto1 = (BigDecimal) (ventasCabeceraVO.getFACIGVME()==BigDecimal.ZERO?0:ventasCabeceraVO.getFACTOTME().subtract(ventasCabeceraVO.getFACIGVME()));
+                    monto2 = (BigDecimal) ventasCabeceraVO.getFACIGVME();
+                    montot =ventasCabeceraVO.getFACTOTME();
+                }             
+                
+                monto1=monto1.setScale(2, BigDecimal.ROUND_HALF_UP);
+                monto2=monto2.setScale(2, BigDecimal.ROUND_HALF_UP);
+                escribir.write(monto1+Util.FILE_DELIMITADOR+monto2);
+                for(int z=0; z<3;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                
+                montot=montot.setScale(2, BigDecimal.ROUND_HALF_UP);
+                if(ventasCabeceraVO.getFACMTOGRAV().compareTo(BigDecimal.ZERO) > 0){
+                    escribir.write(montot+Util.FILE_DELIMITADOR+"1001");
+                }else{
+                    escribir.write(montot+Util.FILE_DELIMITADOR+"1003");
+                }                
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write(monto1+Util.FILE_DELIMITADOR);
+                escribir.write((ventasCabeceraVO.getCLIERUC().trim().compareTo("")==0?"":ventasCabeceraVO.getCLIERUC()));
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write(SesionData.getSesion().getTipDocSunat());//falta corregir es el tipo de documento osea dni
+                for(int z=0; z<33;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("01");
+                escribir.write(Util.FILE_DELIMITADOR+"\n");
+                
+                //cabecera 2
+                escribir.write(Util.FILE_CAB2_CRISOL);
+                if(ventasCabeceraVO.getFACMTOGRAV().compareTo(BigDecimal.ZERO) > 0){
+                    escribir.write(Util.FILE_DELIMITADOR+"1001"+Util.FILE_DELIMITADOR+monto1);
+                }else{
+                    escribir.write(Util.FILE_DELIMITADOR+"1003"+Util.FILE_DELIMITADOR+monto1);
+                }   
+                for(int z=0; z<2;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                escribir.write("\n");
+                
+                
+                //cabecera 3
+                escribir.write(Util.FILE_CAB3_CRISOL);
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("1");
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("1000");
+                escribir.write(Util.FILE_DELIMITADOR);
+                String[] numeroToLetras = NumberToLetterConverter.convertNumberToLetter(ventasCabeceraVO.getFACTOTMO().doubleValue()).split(":");
+                escribir.write(numeroToLetras[1].substring(1));
+                escribir.write(Util.FILE_DELIMITADOR+"\n");
+                
+                
+                //cabecera 4
+                BigDecimal divisorIGV = BigDecimal.ONE.add(SesionData.getSesion().getIgvPorcentaje().divide(new BigDecimal(100)));
+
+                for(VentasDetalleVO temp: ventasDetalleVOList){
+                    escribir.write(Util.FILE_CAB4_CRISOL);
+                    escribir.write(Util.FILE_DELIMITADOR+i+Util.FILE_DELIMITADOR);
+                    BigDecimal montoCab4 = BigDecimal.ZERO;
+                    if(ventasCabeceraVO.getTIPOMONEDA().equals("S")){
+                        montoCab4 =  temp.getDFACPREUMO();
+                    }else{
+                        montoCab4 =  temp.getDFACPREUME();
+                    }
+                    
+                    
+                    //BigDecimal montoCab4 =  temp.getConceptoCobro().getPrecioUnitario();
+                    montoCab4=montoCab4.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(montoCab4+Util.FILE_DELIMITADOR);
+                    escribir.write((temp.getUNIDADMEDIDA().equals("UND")?"NIU":"-"));
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(temp.getCANTIDAD()+Util.FILE_DELIMITADOR);
+                    if(ventasCabeceraVO.getTIPOMONEDA().equals("S")){
+                        escribir.write((temp.getDFACIMP1().compareTo(BigDecimal.ZERO)==0?temp.getDFACPREUMO():((temp.getDFACPREUMO()).divide(divisorIGV,2, RoundingMode.HALF_UP)))+Util.FILE_DELIMITADOR);
+                        
+                    }else{
+                        escribir.write((temp.getDFACIMP1().compareTo(BigDecimal.ZERO)==0?temp.getDFACPREUME():((temp.getDFACPREUME()).divide(divisorIGV,2, RoundingMode.HALF_UP)))+Util.FILE_DELIMITADOR);
+                    
+                    }
+                    //escribir.write((temp.getDFACIMP1().compareTo(BigDecimal.ZERO)==0?temp.getConceptoCobro().getPrecioUnitario():((temp.getConceptoCobro().getPrecioUnitario()).divide(divisorIGV,2, RoundingMode.HALF_UP)))+Util.FILE_DELIMITADOR);
+                    escribir.write(temp.getCODCON());
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("01");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(montoCab4+Util.FILE_DELIMITADOR);
+                    escribir.write(montoCab4+Util.FILE_DELIMITADOR+"\n");
+                    //cabecera 5
+                    escribir.write(Util.FILE_CAB5_CRISOL);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(temp.getDESCON());
+                    escribir.write(Util.FILE_DELIMITADOR+"\n");
+                    //cabecera 6
+                    escribir.write(Util.FILE_CAB6_CRISOL);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("FALSE");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    BigDecimal montoCab6 = BigDecimal.ZERO;
+                    montoCab6=montoCab6.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(montoCab6+"\n");
+                    //cabecera 7
+                    escribir.write(Util.FILE_CAB7_CRISOL);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    BigDecimal montoIgv = temp.getDFACIMPMTO1();
+                    montoIgv= montoIgv.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(montoIgv+Util.FILE_DELIMITADOR);                    
+                    //BigDecimal montoItem =(temp.getMontoIgv().compareTo(BigDecimal.ZERO)==0?temp.getSubtotal():(temp.getSubtotal()).subtract(temp.getMontoIgv()));
+                    BigDecimal montoItem =BigDecimal.ZERO;
+                    if(ventasCabeceraVO.getTIPOMONEDA().equals("S")){
+                        montoItem= temp.getDFACMTOMO();
+                    }else{
+                        montoItem= temp.getDFACMTOME();
+                    }                    
+                    montoItem= montoItem.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(montoItem+Util.FILE_DELIMITADOR);
+                    escribir.write(montoIgv+Util.FILE_DELIMITADOR);
+                    BigDecimal porcIGV= SesionData.getSesion().getIgvPorcentaje();
+                    porcIGV= porcIGV.setScale(2, BigDecimal.ROUND_HALF_UP);
+                    escribir.write(porcIGV+Util.FILE_DELIMITADOR);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("10");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("100");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("IGV");
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write("VAT");
+                    escribir.write(Util.FILE_DELIMITADOR+"\n");
+                    i++;
+                    
+                }
+                //cabecera 8
+                escribir.write(Util.FILE_CAB8_CRISOL);
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write(monto2+Util.FILE_DELIMITADOR+monto2+Util.FILE_DELIMITADOR);
+                escribir.write("100");
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("IGV");
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("VAT");
+                escribir.write(Util.FILE_DELIMITADOR+"\n");
+                
+                //cabecera 9
+                escribir.write(Util.FILE_CAB9_CRISOL);
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("01");//forma de pago
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write(SesionData.getSesion().getFechaProceso().replaceAll("/", "-")+"\n");
+                
+                //cabecera 10
+                escribir.write(Util.FILE_CAB10_CRISOL);
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("CodEstSUNAT");
+                escribir.write(Util.FILE_DELIMITADOR);
+                escribir.write("0001 \n");
+               
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }finally{
+            escribir.close();
+        }
+    }
+    
     
     private String cabeceraNCBD(String operacion,VentasCabeceraVO ventasCabeceraVO ) throws IOException{
         String resultado="ok";
