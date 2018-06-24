@@ -1,11 +1,15 @@
 package com.dematicket.form;
 
 import com.dematicket.bean.DocumentosVO;
+import com.dematicket.bean.MotivoVO;
 import com.dematicket.bean.VentasCabeceraVO;
 import com.dematicket.bean.VentasDetalleVO;
 import com.dematicket.data.DocumentosDAO;
+import com.dematicket.data.MotivoDAO;
 import com.dematicket.data.SesionData;
 import com.dematicket.data.UsuarioData;
+import com.dematicket.data.VentasDAO;
+import static com.dematicket.form.FormTicket.jcbTipoDocumento;
 import com.dematicket.print.DirectPrinterT88V;
 import com.dematicket.util.DbConnection;
 import com.dematicket.util.TipoArchivo;
@@ -14,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -32,6 +37,7 @@ public class FormAnulacion extends javax.swing.JFrame {
     private DefaultTableModel modelo;
     String cabecera = "";
     ArrayList<String> detalle = new ArrayList();
+    static boolean esNotaCredito=false;
     /**
      * Creates new form FormTicket
      */
@@ -64,14 +70,19 @@ public class FormAnulacion extends javax.swing.JFrame {
         //jcastillo fin;
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jcbTipoDocumento = new javax.swing.JComboBox();
-        labelTicket = new javax.swing.JLabel();
-        txtSerie = new javax.swing.JTextField();
-        txtNumero = new javax.swing.JTextField();
-        btnBuscar = new javax.swing.JButton();
+        jcbTipoDocumento1 = new javax.swing.JComboBox();
+        labelTipo1 = new javax.swing.JLabel();
         btnLimpiar = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
-        labelTipo1 = new javax.swing.JLabel();
+        label2 = new javax.swing.JLabel();
+        txtSerie = new javax.swing.JTextField();
+        txtNumero = new javax.swing.JTextField();
+        label3 = new javax.swing.JLabel();
+        label1 = new javax.swing.JLabel();
+        jcbTipoDocumento2 = new javax.swing.JComboBox<>();
+        btnBuscar = new javax.swing.JButton();
+        label4 = new javax.swing.JLabel();
+        jcbMotivo = new javax.swing.JComboBox<>();
         btnAnular = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -100,27 +111,31 @@ public class FormAnulacion extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jcbTipoDocumento.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jcbTipoDocumento.setMaximumSize(new java.awt.Dimension(350, 21));
+        jcbTipoDocumento1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcbTipoDocumento1.setMaximumSize(new java.awt.Dimension(350, 21));
 
-        labelTicket.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        labelTicket.setText("Ticket:");
+        labelTipo1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        labelTipo1.setText("Doc :");
 
-        txtSerie.setMaximumSize(new java.awt.Dimension(40, 20));
-        txtSerie.setMinimumSize(new java.awt.Dimension(40, 20));
-        txtSerie.setPreferredSize(new java.awt.Dimension(40, 20));
-
-        txtNumero.setMaximumSize(new java.awt.Dimension(70, 20));
-        txtNumero.setMinimumSize(new java.awt.Dimension(70, 20));
-        txtNumero.setPreferredSize(new java.awt.Dimension(70, 20));
-
-        btnBuscar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btnBuscar.setText("Buscar");
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelTipo1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jcbTipoDocumento1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(402, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcbTipoDocumento1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelTipo1)))
+        );
 
         btnLimpiar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnLimpiar.setText("Limpiar");
@@ -138,60 +153,91 @@ public class FormAnulacion extends javax.swing.JFrame {
             }
         });
 
-        labelTipo1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        labelTipo1.setText("Doc :");
+        label2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        label2.setText("label2");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelTipo1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jcbTipoDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(labelTicket)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtSerie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnBuscar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnLimpiar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnImprimir)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(5, 5, 5)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLimpiar)
-                    .addComponent(btnImprimir)
-                    .addComponent(btnBuscar)
-                    .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSerie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelTicket)
-                    .addComponent(jcbTipoDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelTipo1)))
-        );
+        txtSerie.setMaximumSize(new java.awt.Dimension(40, 20));
+        txtSerie.setMinimumSize(new java.awt.Dimension(40, 20));
+        txtSerie.setPreferredSize(new java.awt.Dimension(40, 20));
+
+        txtNumero.setMaximumSize(new java.awt.Dimension(70, 20));
+        txtNumero.setMinimumSize(new java.awt.Dimension(70, 20));
+        txtNumero.setPreferredSize(new java.awt.Dimension(70, 20));
+
+        label3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        label3.setText("label3");
+
+        label1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        label1.setText("label1");
+
+        btnBuscar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+
+        label4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        label4.setText("label4");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(label1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jcbTipoDocumento2, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(label2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSerie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(label3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(label4)
+                        .addGap(18, 18, 18)
+                        .addComponent(jcbMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(229, 229, 229)
+                        .addComponent(btnBuscar)
+                        .addGap(42, 42, 42)
+                        .addComponent(btnLimpiar)
+                        .addGap(47, 47, 47)
+                        .addComponent(btnImprimir)))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSerie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label2)
+                    .addComponent(label3)
+                    .addComponent(label1)
+                    .addComponent(jcbTipoDocumento2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label4)
+                    .addComponent(jcbMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnImprimir)
+                    .addComponent(btnBuscar)
+                    .addComponent(btnLimpiar))
+                .addContainerGap())
         );
 
         btnAnular.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -209,23 +255,23 @@ public class FormAnulacion extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnAnular)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(labelTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -261,7 +307,49 @@ public class FormAnulacion extends javax.swing.JFrame {
         btnImprimir.setEnabled(false);
         btnAnular.setEnabled(false);
         for(DocumentosVO temp: DocumentosDAO.consultarDocumentos()){
-            jcbTipoDocumento.addItem(temp.getTIPODOCUMENTO() + " - " + temp.getDOCUMENTO());
+            jcbTipoDocumento1.addItem(temp.getTIPODOCUMENTO() + " - " + temp.getDOCUMENTO());
+        }
+        
+        for(DocumentosVO temp: DocumentosDAO.consultarDocumentos()){
+            jcbTipoDocumento2.addItem(temp.getTIPODOCUMENTO() + " - " + temp.getDOCUMENTO());
+        }
+        
+        for(MotivoVO temp: MotivoDAO.consultarMotivos()){
+            if(temp.getIDMOTIVO() == null){
+                jcbMotivo.addItem(temp.getMOTIVO());
+            }else{
+                jcbMotivo.addItem(temp.getIDMOTIVO() + " - " + temp.getMOTIVO());
+            }
+            
+        }
+        
+    }
+    
+    static void  evaluaComboNC(){
+        String valorTipDocPrincipal =jcbTipoDocumento.getSelectedItem().toString();            
+        String valorSeleccionado[] = valorTipDocPrincipal.split(" - ");
+        int index = jcbTipoDocumento.getSelectedIndex();
+        if(valorSeleccionado[0].equals("07")){
+            jcbTipoDocumento1.setSelectedItem(valorTipDocPrincipal);
+            jcbTipoDocumento1.setEnabled(false);
+            jcbTipoDocumento2.setVisible(true);
+            jcbTipoDocumento2.removeItemAt(index);
+            jcbMotivo.setVisible(true);
+            label1.setVisible(true);
+            label4.setVisible(true);
+            label1.setText("TDoc Ref:");
+            label2.setText("Serie Ref:");
+            label3.setText("Ndoc Ref:");
+            label4.setText("Motivo:");
+            esNotaCredito=true;
+        }else{
+            label1.setVisible(false);
+            label4.setVisible(false);
+            label2.setText("Serie:");
+            label3.setText("Ndoc:");
+            jcbTipoDocumento2.setVisible(false);
+            jcbMotivo.setVisible(false);
+            esNotaCredito=false;
         }
     }
     
@@ -375,6 +463,7 @@ public class FormAnulacion extends javax.swing.JFrame {
     
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         //jcastillo inicio
+        String valor, tipo="";
         txtSerie.setText(txtSerie.getText().toUpperCase());
         txtNumero.setText(Util.completarIzquierda(7,txtNumero.getText(), "0"));
         //jcastillo fin
@@ -396,14 +485,24 @@ public class FormAnulacion extends javax.swing.JFrame {
         }
         String[] dataCabecera = cabecera.split("\\"+Util.FILE_DELIMITADOR);
         lblTotal.setText(dataCabecera[26]);*/
-        VentasCabeceraVO ventasCabeceraVO = buscaCabeceraBD();
+        if(esNotaCredito){
+            valor =jcbTipoDocumento2.getSelectedItem().toString();            
+            String valorSeleccionado[] = valor.split(" - ");
+            tipo= valorSeleccionado[0];
+        }else{
+            valor =jcbTipoDocumento1.getSelectedItem().toString();            
+            String valorSeleccionado[] = valor.split(" - ");
+            tipo= valorSeleccionado[0];
+            
+        }        
+        VentasCabeceraVO ventasCabeceraVO = buscaCabeceraBD(tipo,UsuarioData.getUsuario().getEmpresa());
         ArrayList<VentasDetalleVO> ventasDetalleVOList=null;
         
         if(ventasCabeceraVO == null){
-            JOptionPane.showMessageDialog(null, "EL TICKET NO EXISTE O SE ENCUENTRA ANULADO", "DmPos",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "EL DOCUMENTO NO EXISTE O SE ENCUENTRA ANULADO", "DmPos",JOptionPane.WARNING_MESSAGE);
             return;
         }
-        ventasDetalleVOList = buscaDetalleBD();
+        ventasDetalleVOList = buscaDetalleBD(esNotaCredito);
         for(VentasDetalleVO temp:ventasDetalleVOList){
             Object [] object = new Object[]{
                 temp.getDESCON(),
@@ -454,7 +553,7 @@ public class FormAnulacion extends javax.swing.JFrame {
         }
         return impresion;
     }
-    private VentasCabeceraVO buscaCabeceraBD(){
+    private VentasCabeceraVO buscaCabeceraBD(String documento, String compania){
         DbConnection conex= new DbConnection();
         VentasCabeceraVO ventasCabeceraVO = null;
         try{
@@ -463,11 +562,14 @@ public class FormAnulacion extends javax.swing.JFrame {
                 "FACDCTOMN,FACDCTOME,FACUSER,FACFREG,FACHREG,FACANOMES,FACTCAM,FACFLAGD,FACIGVMO,FACIGVMN,FACIGVME, " +
                 "FACISCMO,FACISCMN,FACISCME,FACTOTMO,FACTOTMN,FACTOTME,FACTIP,TIPODOCUMENTO,TIPPERID,FACDSCTO1, " +
                 "FACIMPREP,FACFEVCMTO,FACTCLI,FACTDES,CLIEDIR,TIPOADQ,FACIGV2MN,FACIGV2ME,FACIGV2MO,INICIAL, " +
-                "FACSERMO,FACSERMN,FACSERME,PORIGV,PORSER " +
-                "FROM DMTICKET.DMT_VENTAS_CAB WHERE SERIE=? AND NUMERO=? AND FACESTADO=?");
+                "FACSERMO,FACSERMN,FACSERME,PORIGV,PORSER,PVTAID,TURNO,FACMTOGRAV,FACMTOEXO,FACMTOINA,FACMTOGRAT,TIPOPERACION,FLAGNC,TIPODOC_REF, "+
+                "SERIE_REF,NUMERO_REF,MOTIVO,FACMTOGRAV,FACMTOEXO,FACMTOINA,FACMTOGRAT "+
+                "FROM DMTICKET.DMT_VENTAS_CAB WHERE SERIE=? AND NUMERO=? AND FACESTADO=? AND IDCOMPANIA=? AND TIPODOCUMENTO=?");
             consulta.setString(1, txtSerie.getText().trim());
             consulta.setInt(2, Integer.parseInt(txtNumero.getText().trim()));
             consulta.setString(3, "ACEPTADO");
+            consulta.setString(4, compania);
+            consulta.setString(5, documento);
             ResultSet res = consulta.executeQuery();
             if(res.next()){
                 ventasCabeceraVO = new VentasCabeceraVO();
@@ -527,6 +629,22 @@ public class FormAnulacion extends javax.swing.JFrame {
                 ventasCabeceraVO.setFACSERME(res.getBigDecimal("FACSERME"));
                 ventasCabeceraVO.setPORIGV(res.getBigDecimal("PORIGV"));
                 ventasCabeceraVO.setPORSER(res.getBigDecimal("PORSER"));
+                //ULTIMOS CAMBIOS
+                ventasCabeceraVO.setFLAGNC(res.getString("FLAGNC"));
+                ventasCabeceraVO.setTIPODOC_REF(res.getString("TIPODOC_REF"));
+                ventasCabeceraVO.setSERIE_REF(res.getString("SERIE_REF"));
+                ventasCabeceraVO.setNUMERO_REF(res.getString("NUMERO_REF"));
+                ventasCabeceraVO.setMOTIVO(res.getString("MOTIVO"));
+                
+                ventasCabeceraVO.setPVTAID(res.getString("PVTAID"));
+                ventasCabeceraVO.setTURNO(res.getString("TURNO"));
+                
+                ventasCabeceraVO.setTIPOPERACION(res.getString("TIPOPERACION"));
+                
+                ventasCabeceraVO.setFACMTOGRAV(res.getBigDecimal("FACMTOGRAV"));
+                ventasCabeceraVO.setFACMTOEXO(res.getBigDecimal("FACMTOEXO"));
+                ventasCabeceraVO.setFACMTOINA(res.getBigDecimal("FACMTOINA"));
+                ventasCabeceraVO.setFACMTOGRAT(res.getBigDecimal("FACMTOGRAT"));
             }
             res.close();
             consulta.close();
@@ -576,18 +694,25 @@ public class FormAnulacion extends javax.swing.JFrame {
         }
         return impresion;
     }
-    private ArrayList<VentasDetalleVO> buscaDetalleBD(){
+    private ArrayList<VentasDetalleVO> buscaDetalleBD(boolean esNotaCredito){
         ArrayList<VentasDetalleVO> ventasDetalleVOList = new ArrayList();
         DbConnection conex= new DbConnection();
         VentasDetalleVO ventasDetalleVO = null;
         try{
-            String valor =jcbTipoDocumento.getSelectedItem().toString();            
-            String valorSeleccionado[] = valor.split(" - ");
-            String tipo= valorSeleccionado[0];
-        
+            String valor,tipo = "";
+            if(esNotaCredito){
+                valor =jcbTipoDocumento2.getSelectedItem().toString();            
+                String valorSeleccionado[] = valor.split(" - ");
+                tipo= valorSeleccionado[0]; 
+            }else{
+                valor =jcbTipoDocumento1.getSelectedItem().toString();            
+                String valorSeleccionado[] = valor.split(" - ");
+                tipo= valorSeleccionado[0]; 
+            }
+                   
             PreparedStatement consulta = conex.getConnection().prepareStatement("SELECT IDCOMPANIA,TIPODOCUMENTO,SERIE,NUMERO,NUMREG,CODCON,DESCON,UNIDADMEDIDA,CANTIDAD,DFACPREUMO, " +
                 "DFACPREUMN,DFACPREUME,DFACMTOMO,DFACMTOMN,DFACMTOME,FECHVTA,DFACIMP1,DFACIMPMTO1,DFACVTOTMO,DFACVTOTMN, " +
-                "DFACVTOTME,DFACTFLAG " +
+                "DFACVTOTME,DFACTFLAG, DFACDCTOMO,DFACDCTOME, DFACDCTOMN, DFACPREVMN,DFACPREVMO,DFACPREVME,APLIMPTO  " +
                 "FROM DMTICKET.DMT_VENTAS_DET WHERE SERIE=? AND NUMERO=? AND TIPODOCUMENTO=?");
             consulta.setString(1, txtSerie.getText().trim());
             consulta.setInt(2, Integer.parseInt(txtNumero.getText().trim()));
@@ -617,6 +742,15 @@ public class FormAnulacion extends javax.swing.JFrame {
                 ventasDetalleVO.setDFACVTOTMN(res.getBigDecimal("DFACVTOTMN"));
                 ventasDetalleVO.setDFACVTOTME(res.getBigDecimal("DFACVTOTME"));
                 ventasDetalleVO.setDFACTFLAG(res.getString("DFACTFLAG"));
+                
+                ventasDetalleVO.setDFACDCTOMO(res.getBigDecimal("DFACDCTOMO"));
+                ventasDetalleVO.setDFACDCTOME(res.getBigDecimal("DFACDCTOME"));
+                ventasDetalleVO.setDFACDCTOMN(res.getBigDecimal("DFACDCTOMN"));
+                ventasDetalleVO.setDFACPREVMN(res.getBigDecimal("DFACPREVMN"));
+                ventasDetalleVO.setDFACPREVMO(res.getBigDecimal("DFACPREVMO"));
+                ventasDetalleVO.setDFACPREVME(res.getBigDecimal("DFACPREVME"));
+                ventasDetalleVO.setAPLIMPTO(res.getString("APLIMPTO"));               
+                
                 ventasDetalleVOList.add(ventasDetalleVO);
             }
             res.close();
@@ -842,6 +976,8 @@ public class FormAnulacion extends javax.swing.JFrame {
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
         // TODO add your handling code here:
         int i=0;
+        String valor,tipo,tipDocTemp,serieTemp,numeroTemp = "";
+        
         /*while(i<SesionData.getSesion().getImpresiones()){
             if(i==0){
                 imprimir(false);
@@ -852,22 +988,147 @@ public class FormAnulacion extends javax.swing.JFrame {
         }*/
        try{ 
         //File fileFELocal = Util.validaArchivoTicket(TipoArchivo.TXTLocal.getTipo());
-        String valor =jcbTipoDocumento.getSelectedItem().toString();            
-        String valorSeleccionado[] = valor.split(" - ");
-        String tipo= valorSeleccionado[0];
-        File fileFELocal = Util.buscarTicketaImprimir(TipoArchivo.TXTLocal.getTipo(), txtSerie.getText(), txtNumero.getText(),tipo);
-        File destino = new File(SesionData.getSesion().getrutaFELocal());
-        if(fileFELocal.exists()){
-            Files.copy(Paths.get(fileFELocal.getPath()),Paths.get(destino.getPath()+"\\"+fileFELocal.getName()),
-                        StandardCopyOption.REPLACE_EXISTING);            
+        
+        if(esNotaCredito){
+            if(jcbMotivo.getSelectedItem().toString().startsWith("-")){
+                JOptionPane.showMessageDialog(null, "DEBE SELECCIONAR UN MOTIVO", "DmPos", JOptionPane.WARNING_MESSAGE);            
+                return;  
+            }
+            valor =jcbTipoDocumento2.getSelectedItem().toString();            
+            String valorSeleccionado[] = valor.split(" - ");
+            tipo= valorSeleccionado[0];
+            File fileFELocal = Util.buscarTicketaImprimir(TipoArchivo.TXTLocal.getTipo(), txtSerie.getText(), txtNumero.getText(),tipo);
+            File destino = new File(SesionData.getSesion().getrutaFELocal());
+            if(fileFELocal.exists()){
+                //Files.copy(Paths.get(fileFELocal.getPath()),Paths.get(destino.getPath()+"\\"+fileFELocal.getName()),StandardCopyOption.REPLACE_EXISTING);            
+                VentasCabeceraVO ventasCabeceraVO = buscaCabeceraBD(tipo,UsuarioData.getUsuario().getEmpresa());
+                //ventasCabeceraVO.setFLAGNC("S");
+                String resultado1=cabeceraNCBD("Actualizar",ventasCabeceraVO);
+                //recupero los datos originales de la venta
+                tipDocTemp = ventasCabeceraVO.getTIPODOCUMENTO();
+                serieTemp = ventasCabeceraVO.getSERIE();
+                numeroTemp = ventasCabeceraVO.getNUMERO();
+                //capturamos los datos de la nota de credito
+                ventasCabeceraVO.setTIPODOCUMENTO(SesionData.getSesion().getTipoDocumento());
+                ventasCabeceraVO.setSERIE(SesionData.getSesion().getSerie());
+                ventasCabeceraVO.setNUMERO(Util.completarIzquierda(8, SesionData.getSesion().getNumero()+"", "0"));
+                ventasCabeceraVO.setTIPODOC_REF(tipDocTemp);
+                ventasCabeceraVO.setSERIE_REF(serieTemp);
+                ventasCabeceraVO.setNUMERO_REF(numeroTemp);
+                valor =jcbMotivo.getSelectedItem().toString();            
+                String valorSeleccionadoMotivo[] = valor.split(" - ");
+                ventasCabeceraVO.setMOTIVO(valorSeleccionadoMotivo[0]);
+                String resultado2=cabeceraNCBD("Grabar",ventasCabeceraVO);
+                    
+                ArrayList<VentasDetalleVO> ventasDetalleVOList=null;
+                ventasDetalleVOList = buscaDetalleBD(esNotaCredito);
+                for(VentasDetalleVO temp: ventasDetalleVOList){
+                    temp.setTIPODOCUMENTO(SesionData.getSesion().getTipoDocumento());
+                    temp.setSERIE(SesionData.getSesion().getSerie());
+                    temp.setNUMERO(Util.completarIzquierda(8, SesionData.getSesion().getNumero()+"", "0"));
+                    temp.setPROCESADO(null);
+                    detalleNCBD(temp);
+                }
+                if(!resultado1.equals("ok") || !resultado2.equals("ok")){
+                    JOptionPane.showMessageDialog(null, "NO SE PUDO PROCESO LA NOTA DE CRÉDITO", "DmPos",JOptionPane.ERROR_MESSAGE);
+                }else{
+                    Limpiar();
+                    JOptionPane.showMessageDialog(null, "NOTA DE CRÉDITO PROCESADA CORRECTAMENTE", "DmPos",JOptionPane.INFORMATION_MESSAGE);
+                }
+                
+            }else{
+                Limpiar();
+                JOptionPane.showMessageDialog(null, "NO SE PUEDE REIMPRIMIR EL DOCUMENTO, CONTACTE AL ADMINISTRADOR", "DmPos",JOptionPane.ERROR_MESSAGE);
+            }     
         }else{
-            Limpiar();
-            JOptionPane.showMessageDialog(null, "NO SE PUEDE REIMPRIMIR EL TICKET, CONTACTE AL ADMINISTRADOR", "DmPos",JOptionPane.ERROR_MESSAGE);
-        }        
+            valor =jcbTipoDocumento1.getSelectedItem().toString();            
+            String valorSeleccionado[] = valor.split(" - ");
+            tipo= valorSeleccionado[0];
+            File fileFELocal = Util.buscarTicketaImprimir(TipoArchivo.TXTLocal.getTipo(), txtSerie.getText(), txtNumero.getText(),tipo);
+            File destino = new File(SesionData.getSesion().getrutaFELocal());
+            if(fileFELocal.exists()){
+                Files.copy(Paths.get(fileFELocal.getPath()),Paths.get(destino.getPath()+"\\"+fileFELocal.getName()),
+                            StandardCopyOption.REPLACE_EXISTING);            
+            }else{
+                Limpiar();
+                JOptionPane.showMessageDialog(null, "NO SE PUEDE REIMPRIMIR EL DOCUMENTO, CONTACTE AL ADMINISTRADOR", "DmPos",JOptionPane.ERROR_MESSAGE);
+            }     
+        }
+        
+        
+           
        }catch(Exception ex){
             ex.printStackTrace();
         }
     }//GEN-LAST:event_btnImprimirActionPerformed
+    
+    private String cabeceraNCBD(String operacion,VentasCabeceraVO ventasCabeceraVO ) throws IOException{
+        String resultado="ok";
+        try{
+            VentasDAO ventasDAO = new VentasDAO();
+            if(operacion.equals("Grabar")){
+               if(!ventasDAO.insertaCabeceraVentasNC(ventasCabeceraVO)){
+                resultado="";
+                JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
+               }
+            //descomentar al momento de pasarlo
+//            if(!ventasDAO.insertaCabeceraOracleVentas(ventasCabeceraVO)){
+//                resultado="";
+//                JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA EN OASIS", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+//            }else if(!ventasDAO.actualizaCabeceraVentas(ventasCabeceraVO)){
+//                    resultado="";
+//                    JOptionPane.showMessageDialog(null, "NO SE PUDO ACTUALIZAR ESTADO DE LA CABECERA DE LA VENTA", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+//            }           
+            }else if(operacion.equals("Actualizar")){
+                if(!ventasDAO.actualizaCabeceraVentasNC(ventasCabeceraVO)){
+                    resultado="";
+                    JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }catch(Exception ex){
+            resultado="";
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    private String detalleNCBD(VentasDetalleVO ventasDetalleVO) throws IOException{
+        String resultado="ok";
+        VentasDAO ventasDAO = new VentasDAO();
+        try{
+            int i=1;
+            if(!ventasDAO.insertaDetalleVentas(ventasDetalleVO)){
+                resultado="mysql";                    
+            }
+//                if(UsuarioData.getUsuario().getEmpresa().equals("1")){//si es DM entonces que grabe en OASIS
+//                    if(!ventasDAO.insertaDetalleOracleVentas(ventasCabeceraVO, ventasDetalleVO)){
+//                        resultado="oracle";                    
+//                    }
+//                }else if(!ventasDAO.actualizaDetalleVentas(ventasDetalleVO)){
+//                    resultado="updmysql";                    
+//                }
+                i++;
+            
+            if(resultado.equalsIgnoreCase("mysql")){
+              resultado="";  
+              JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR EL DETALLE DE LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
+            }
+            if(resultado.equalsIgnoreCase("oracle")){
+              resultado="";  
+              JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR EL DETALLE DE LA VENTA EN OASIS", "DmPos", JOptionPane.ERROR_MESSAGE);  
+            }
+            if(resultado.equalsIgnoreCase("updmysql")){
+              resultado="";  
+              JOptionPane.showMessageDialog(null, "NO SE PUDO ACTUALIZAR ESTADO DEL DETALLE DE LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
+            }
+        }catch(Exception ex){
+            resultado="";
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
+    
+    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnular;
@@ -878,8 +1139,13 @@ public class FormAnulacion extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JComboBox jcbTipoDocumento;
-    private javax.swing.JLabel labelTicket;
+    public static javax.swing.JComboBox<String> jcbMotivo;
+    public static javax.swing.JComboBox jcbTipoDocumento1;
+    public static javax.swing.JComboBox<String> jcbTipoDocumento2;
+    public static javax.swing.JLabel label1;
+    public static javax.swing.JLabel label2;
+    public static javax.swing.JLabel label3;
+    public static javax.swing.JLabel label4;
     private javax.swing.JLabel labelTipo1;
     private javax.swing.JLabel labelTotal;
     private javax.swing.JTextField lblTotal;

@@ -45,6 +45,8 @@ public class VentasDetalleVO {
     private BigDecimal DFACPREVMN;    
     private BigDecimal DFACPREVME;  
     private String APLIMPTO;
+    
+    private String PROCESADO;
 
         
 
@@ -342,6 +344,20 @@ public class VentasDetalleVO {
      */
     public void setAPLIMPTO(String APLIMPTO) {
         this.APLIMPTO = APLIMPTO;
+    }
+
+    /**
+     * @return the PROCESADO
+     */
+    public String getPROCESADO() {
+        return PROCESADO;
+    }
+
+    /**
+     * @param PROCESADO the PROCESADO to set
+     */
+    public void setPROCESADO(String PROCESADO) {
+        this.PROCESADO = PROCESADO;
     }
   
     

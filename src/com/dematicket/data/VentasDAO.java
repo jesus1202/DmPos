@@ -238,6 +238,226 @@ public class VentasDAO {
         }
         return resultado;
     }
+    public boolean insertaCabeceraVentasNC(VentasCabeceraVO ventasCabeceraVO){
+       DbConnection conex= new DbConnection(); 
+       try{ 
+            PreparedStatement consulta = conex.getConnection().prepareStatement("INSERT INTO dmticket.dmt_ventas_cab " +
+            "(IDCOMPANIA," +
+            "TIPODOCUMENTO," +
+            "SERIE," +
+            "NUMERO," +
+            "FECHAPROCESO," +
+            "IDLOCALIDAD," +
+            "TINID," +
+            "ALMACEN," +
+            "PVTAID," +
+            "LISTAPRECIOS," +
+            "CODIGOCLIENTE," +
+            "CLASEAUX," +
+            "CLIERUC," +
+            "TURNO," +
+            "VEID," +
+            "FORMAPAGO," +
+            "TIPOMONEDA," +
+            "TIPOVENTA," +
+            "FACMTOMO," +
+            "FACMTOMN," +
+            "FACMTOME," +
+            "FACESTADO," +
+            "FACDCTOMO," +
+            "FACDCTOMN," +
+            "FACDCTOME," +
+            "FACUSER," +
+            "FACFREG," +
+            "FACHREG," +
+            "FACANOMES," +
+            "FACTCAM," +
+            "FACFLAGD," +
+            "FACIGVMO," +
+            "FACIGVMN," +
+            "FACIGVME," +
+            "FACISCMO," +
+            "FACISCMN," +
+            "FACISCME," +
+            "FACTOTMO," +
+            "FACTOTMN," +
+            "FACTOTME," +
+            "FACTIP," +
+            "TIPPERID," +
+            "FACDSCTO1," +
+            "FACIMPREP," +
+            "FACFEVCMTO," +
+            "FACTCLI," +
+            "FACTDES," +
+            "CLIEDIR," +
+            "TIPOADQ," +
+            "FACIGV2MN," +
+            "FACIGV2ME," +
+            "FACIGV2MO," +
+            "INICIAL," +
+            "FACSERMO," +
+            "FACSERMN," +
+            "FACSERME," +
+            "PORIGV," +
+            "PORSER," +
+            "FACMTOGRAV," +
+            "FACMTOEXO," +
+            "FACMTOINA," +
+            "FACMTOGRAT," +
+            "TIPOPERACION," +
+            
+            "TIPODOC_REF," +
+            "SERIE_REF," +
+            "NUMERO_REF," +
+            "MOTIVO) " +
+            "VALUES" +
+            "(?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," +
+            "?," + 
+            "?," +
+            "?);");
+            consulta.setString(1,ventasCabeceraVO.getIDCOMPANIA());
+            consulta.setString(2,ventasCabeceraVO.getTIPODOCUMENTO());
+            consulta.setString(3,ventasCabeceraVO.getSERIE());
+            consulta.setString(4,ventasCabeceraVO.getNUMERO());
+            consulta.setString(5,ventasCabeceraVO.getFECHAPROCESO());
+            consulta.setString(6,ventasCabeceraVO.getIDLOCALIDAD());
+            consulta.setString(7,ventasCabeceraVO.getTINID());
+            consulta.setString(8,ventasCabeceraVO.getALMACEN());
+            consulta.setString(9,ventasCabeceraVO.getPVTAID());
+            consulta.setString(10,ventasCabeceraVO.getLISTAPRECIOS());
+            consulta.setString(11,ventasCabeceraVO.getCODIGOCLIENTE());
+            consulta.setString(12,ventasCabeceraVO.getCLASEAUX());
+            consulta.setString(13,ventasCabeceraVO.getCLIERUC());
+            consulta.setString(14,ventasCabeceraVO.getTURNO());
+            consulta.setString(15,ventasCabeceraVO.getVEID());
+            consulta.setString(16,ventasCabeceraVO.getFORMAPAGO());
+            consulta.setString(17,ventasCabeceraVO.getTIPOMONEDA());
+            consulta.setString(18,ventasCabeceraVO.getTIPOVENTA());            
+            consulta.setBigDecimal(19,ventasCabeceraVO.getFACMTOMO());
+            consulta.setBigDecimal(20,ventasCabeceraVO.getFACMTOMN());
+            consulta.setBigDecimal(21,ventasCabeceraVO.getFACMTOME());
+            consulta.setString(22,ventasCabeceraVO.getFACESTADO());
+            consulta.setBigDecimal(23,ventasCabeceraVO.getFACDCTOMO());
+            consulta.setBigDecimal(24,ventasCabeceraVO.getFACDCTOMN());
+            consulta.setBigDecimal(25,ventasCabeceraVO.getFACDCTOME());
+            consulta.setString(26,ventasCabeceraVO.getFACUSER());
+            consulta.setString(27,ventasCabeceraVO.getFACFREG());
+            consulta.setString(28,ventasCabeceraVO.getFACHREG());
+            consulta.setString(29,ventasCabeceraVO.getFACANOMES());
+            consulta.setBigDecimal(30,ventasCabeceraVO.getFACTCAM());
+            consulta.setString(31,ventasCabeceraVO.getFACFLAGD());            
+            consulta.setBigDecimal(32,ventasCabeceraVO.getFACIGVMO());
+            consulta.setBigDecimal(33,ventasCabeceraVO.getFACIGVMN());
+            consulta.setBigDecimal(34,ventasCabeceraVO.getFACIGVME());
+            consulta.setBigDecimal(35,ventasCabeceraVO.getFACISCMO());
+            consulta.setBigDecimal(36,ventasCabeceraVO.getFACISCMN());
+            consulta.setBigDecimal(37,ventasCabeceraVO.getFACISCME());
+            consulta.setBigDecimal(38,ventasCabeceraVO.getFACTOTMO());
+            consulta.setBigDecimal(39,ventasCabeceraVO.getFACTOTMN());
+            consulta.setBigDecimal(40,ventasCabeceraVO.getFACTOTME());
+            consulta.setString(41,ventasCabeceraVO.getFACTIP());            
+            consulta.setString(42,ventasCabeceraVO.getTIPPERID());
+            consulta.setBigDecimal(43,ventasCabeceraVO.getFACDSCTO1());
+            consulta.setString(44,ventasCabeceraVO.getFACIMPREP());
+            consulta.setString(45,ventasCabeceraVO.getFACFEVCMTO());
+            consulta.setString(46,ventasCabeceraVO.getFACTCLI());
+            consulta.setString(47,ventasCabeceraVO.getFACTDES());
+            consulta.setString(48,ventasCabeceraVO.getCLIEDIR());
+            consulta.setString(49,ventasCabeceraVO.getTIPOADQ());
+            consulta.setBigDecimal(50,ventasCabeceraVO.getFACIGV2MN());
+            consulta.setBigDecimal(51,ventasCabeceraVO.getFACIGV2ME());
+            consulta.setBigDecimal(52,ventasCabeceraVO.getFACIGV2MO());            
+            consulta.setBigDecimal(53,ventasCabeceraVO.getINICIAL());
+            consulta.setBigDecimal(54,ventasCabeceraVO.getFACSERMO());
+            consulta.setBigDecimal(55,ventasCabeceraVO.getFACSERMN());
+            consulta.setBigDecimal(56,ventasCabeceraVO.getFACSERME());
+            consulta.setBigDecimal(57,ventasCabeceraVO.getPORIGV());
+            consulta.setBigDecimal(58,ventasCabeceraVO.getPORSER());            
+            consulta.setBigDecimal(59,ventasCabeceraVO.getFACMTOGRAV());
+            consulta.setBigDecimal(60,ventasCabeceraVO.getFACMTOEXO());
+            consulta.setBigDecimal(61,ventasCabeceraVO.getFACMTOINA());
+            consulta.setBigDecimal(62,ventasCabeceraVO.getFACMTOGRAT());
+            consulta.setString(63,ventasCabeceraVO.getTIPOPERACION());
+            
+            consulta.setString(64,ventasCabeceraVO.getTIPODOC_REF());
+            consulta.setString(65,ventasCabeceraVO.getSERIE_REF());
+            consulta.setString(66,ventasCabeceraVO.getNUMERO_REF());
+            consulta.setString(67,ventasCabeceraVO.getMOTIVO());
+            
+            consulta.executeUpdate();
+            consulta.close();
+            conex.desconectar();
+            
+        }catch(Exception ex){
+            resultado = false;
+            conex.desconectar();
+            ex.printStackTrace();
+        }
+        return resultado;
+    }
     
     
     public boolean verificaVentasSinProcesar(){
@@ -429,12 +649,35 @@ public class VentasDAO {
         DbConnection conex= new DbConnection(); 
         try{
             PreparedStatement consulta = conex.getConnection().prepareStatement("UPDATE DMTICKET.DMT_VENTAS_CAB SET PROCESADO=? WHERE "
-                    + "IDCOMPANIA=? AND IDLOCALIDAD=? AND SERIE=? AND NUMERO=?");
+                    + "IDCOMPANIA=? AND TIPODOCUMENTO=? AND SERIE=? AND NUMERO=? AND PVTAID=?");
             consulta.setString(1, "S");
             consulta.setString(2, ventasCabeceraVO.getIDCOMPANIA());
-            consulta.setString(3, ventasCabeceraVO.getIDLOCALIDAD());
+            consulta.setString(3, ventasCabeceraVO.getTIPODOCUMENTO());
             consulta.setString(4, ventasCabeceraVO.getSERIE());
             consulta.setString(5, ventasCabeceraVO.getNUMERO());
+            consulta.setString(6, ventasCabeceraVO.getPVTAID());
+            consulta.executeUpdate();          
+            consulta.close();
+            conex.desconectar();            
+        }catch(Exception ex){
+            resultado = false;
+            conex.desconectar();
+            ex.printStackTrace();
+        }        
+        return resultado;
+    }
+    public boolean actualizaCabeceraVentasNC(VentasCabeceraVO ventasCabeceraVO){
+        DbConnection conex= new DbConnection(); 
+        try{
+            PreparedStatement consulta = conex.getConnection().prepareStatement("UPDATE DMTICKET.DMT_VENTAS_CAB SET FLAGNC=? "
+                    + "WHERE "
+                    + "IDCOMPANIA=? AND TIPODOCUMENTO=? AND SERIE=? AND NUMERO=? AND PVTAID=?");
+            consulta.setString(1, "S");
+            consulta.setString(2, ventasCabeceraVO.getIDCOMPANIA());
+            consulta.setString(3, ventasCabeceraVO.getTIPODOCUMENTO());
+            consulta.setString(4, ventasCabeceraVO.getSERIE());
+            consulta.setString(5, ventasCabeceraVO.getNUMERO());
+            consulta.setString(6, ventasCabeceraVO.getPVTAID());
             consulta.executeUpdate();          
             consulta.close();
             conex.desconectar();            

@@ -2033,11 +2033,13 @@ public class FormTicket extends javax.swing.JFrame {
     private void btnBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusquedaActionPerformed
         if(formAnulacion==null){
             formAnulacion = new FormAnulacion();
+            formAnulacion.evaluaComboNC();
             formAnulacion.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             formAnulacion.setLocationRelativeTo(null);
             formAnulacion.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             formAnulacion.setVisible(true);
         }else{
+            formAnulacion.evaluaComboNC();
             formAnulacion.setVisible(true);
         }
         formAnulacion.Limpiar();
@@ -3092,7 +3094,7 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     public static javax.swing.JComboBox jcbTipoConcepto;
-    private javax.swing.JComboBox jcbTipoDocumento;
+    public static javax.swing.JComboBox jcbTipoDocumento;
     public javax.swing.JComboBox<String> jcbTipoMoneda;
     private javax.swing.JPanel jpnHeader;
     private javax.swing.JPanel jpnUsuario;

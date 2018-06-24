@@ -79,6 +79,14 @@ public class VentasCabeceraVO {
     private BigDecimal FACMTOINA;
     private BigDecimal FACMTOGRAT;
     private String TIPOPERACION;
+    private String FLAGNC;
+    private String TIPODOC_REF;
+    private String SERIE_REF;
+    private String NUMERO_REF;
+    private String MOTIVO;
+    private String OBSERVACION;
+    
+    
 
 
     public String getIDCOMPANIA() {
@@ -600,9 +608,95 @@ public class VentasCabeceraVO {
     public void setTIPOPERACION(String TIPOPERACION) {
         this.TIPOPERACION = TIPOPERACION;
     }
+    
+    
 
     @Override
     public String toString() {
         return "VentasCabeceraVO{" + "IDCOMPANIA=" + IDCOMPANIA + ", IDLOCALIDAD=" + IDLOCALIDAD + ", TINID=" + TINID + ", ALMACEN=" + ALMACEN + ", LISTAPRECIOS=" + LISTAPRECIOS + ", CODIGOCLIENTE=" + CODIGOCLIENTE + ", CLASEAUX=" + CLASEAUX + ", CLIERUC=" + CLIERUC + ", SERIE=" + SERIE + ", NUMERO=" + NUMERO + ", FECHAPROCESO=" + FECHAPROCESO + ", VEID=" + VEID + ", FORMAPAGO=" + FORMAPAGO + ", TIPOMONEDA=" + TIPOMONEDA + ", TIPOVENTA=" + TIPOVENTA + ", FACMTOMO=" + FACMTOMO + ", FACMTOMN=" + FACMTOMN + ", FACMTOME=" + FACMTOME + ", FACESTADO=" + FACESTADO + ", FACDCTOMO=" + FACDCTOMO + ", FACDCTOMN=" + FACDCTOMN + ", FACDCTOME=" + FACDCTOME + ", FACUSER=" + FACUSER + ", FACFREG=" + FACFREG + ", FACHREG=" + FACHREG + ", FACANOMES=" + FACANOMES + ", FACTCAM=" + FACTCAM + ", FACFLAGD=" + FACFLAGD + ", FACIGVMO=" + FACIGVMO + ", FACIGVMN=" + FACIGVMN + ", FACIGVME=" + FACIGVME + ", FACISCMO=" + FACISCMO + ", FACISCMN=" + FACISCMN + ", FACISCME=" + FACISCME + ", FACTOTMO=" + FACTOTMO + ", FACTOTMN=" + FACTOTMN + ", FACTOTME=" + FACTOTME + ", FACTIP=" + FACTIP + ", TIPODOCUMENTO=" + TIPODOCUMENTO + ", TIPPERID=" + TIPPERID + ", FACDSCTO1=" + FACDSCTO1 + ", FACIMPREP=" + FACIMPREP + ", FACFEVCMTO=" + FACFEVCMTO + ", FACTCLI=" + FACTCLI + ", FACTDES=" + FACTDES + ", CLIEDIR=" + CLIEDIR + ", TIPOADQ=" + TIPOADQ + ", FACIGV2MN=" + FACIGV2MN + ", FACIGV2ME=" + FACIGV2ME + ", FACIGV2MO=" + FACIGV2MO + ", INICIAL=" + INICIAL + ", FACSERMO=" + FACSERMO + ", FACSERMN=" + FACSERMN + ", FACSERME=" + FACSERME + ", PORIGV=" + PORIGV + ", PORSER=" + PORSER + ", USUMOD=" + USUMOD + ", FECMOD=" + FECMOD + ", PVTAID=" + PVTAID + ", TURNO=" + TURNO + ", FACMTOGRAV=" + FACMTOGRAV + ", FACMTOEXO=" + FACMTOEXO + ", FACMTOINA=" + FACMTOINA + ", FACMTOGRAT=" + FACMTOGRAT + ", TIPOPERACION=" + TIPOPERACION + '}';
     }  
+
+    /**
+     * @return the FLAGNC
+     */
+    public String getFLAGNC() {
+        return FLAGNC;
+    }
+
+    /**
+     * @param FLAGNC the FLAGNC to set
+     */
+    public void setFLAGNC(String FLAGNC) {
+        this.FLAGNC = FLAGNC;
+    }
+
+    /**
+     * @return the TIPODOC_REF
+     */
+    public String getTIPODOC_REF() {
+        return TIPODOC_REF;
+    }
+
+    /**
+     * @param TIPODOC_REF the TIPODOC_REF to set
+     */
+    public void setTIPODOC_REF(String TIPODOC_REF) {
+        this.TIPODOC_REF = TIPODOC_REF;
+    }
+
+    /**
+     * @return the SERIE_REF
+     */
+    public String getSERIE_REF() {
+        return SERIE_REF;
+    }
+
+    /**
+     * @param SERIE_REF the SERIE_REF to set
+     */
+    public void setSERIE_REF(String SERIE_REF) {
+        this.SERIE_REF = SERIE_REF;
+    }
+
+    /**
+     * @return the NUMERO_REF
+     */
+    public String getNUMERO_REF() {
+        return NUMERO_REF;
+    }
+
+    /**
+     * @param NUMERO_REF the NUMERO_REF to set
+     */
+    public void setNUMERO_REF(String NUMERO_REF) {
+        this.NUMERO_REF = NUMERO_REF;
+    }
+
+    /**
+     * @return the MOTIVO
+     */
+    public String getMOTIVO() {
+        return MOTIVO;
+    }
+
+    /**
+     * @param MOTIVO the MOTIVO to set
+     */
+    public void setMOTIVO(String MOTIVO) {
+        this.MOTIVO = MOTIVO;
+    }
+
+    /**
+     * @return the OBSERVACION
+     */
+    public String getOBSERVACION() {
+        return OBSERVACION;
+    }
+
+    /**
+     * @param OBSERVACION the OBSERVACION to set
+     */
+    public void setOBSERVACION(String OBSERVACION) {
+        this.OBSERVACION = OBSERVACION;
+    }
 }
