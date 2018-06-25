@@ -917,6 +917,10 @@ public class FormTicket extends javax.swing.JFrame {
                 return;
             }
         }
+        if(valorSeleccionado[0].equals("07")){
+             JOptionPane.showMessageDialog(null, "OPERACIÓN NO PERMITIDA", "DmPos", JOptionPane.WARNING_MESSAGE);
+             return;
+        }
         if(ticket.getDetalleTicket().size() <= 0){
             JOptionPane.showMessageDialog(null, "POR FAVOR INGRESE EL DETALLE", "DmPos", JOptionPane.WARNING_MESSAGE);
             spnCantidad.requestFocus();
@@ -1876,11 +1880,13 @@ public class FormTicket extends javax.swing.JFrame {
     }
     
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        logger.info("Agregar info");
-        logger.warn("Agregar warn");
-        logger.error("Agregar error");
-        logger.error("Agregar error");
-        logger.fatal("Agregar fatal");
+        String valor= jcbTipoDocumento.getSelectedItem().toString();
+        String valorSeleccionado[] = valor.split(" - ");
+        if(valorSeleccionado[0].equals("07")){
+            JOptionPane.showMessageDialog(null, "OPERACIÓN NO PERMITIDA", "DmPos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         int cantidad = Integer.parseInt(spnCantidad.getValue().toString().trim());
         if(cantidad <= 0){
             JOptionPane.showMessageDialog(null, "INGRESAR UNA CANTIDAD VÁLIDA", "DmPos", JOptionPane.WARNING_MESSAGE);
