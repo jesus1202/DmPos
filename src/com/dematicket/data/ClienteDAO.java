@@ -142,7 +142,7 @@ public class ClienteDAO {
          consultaUpdate.setString(17,codClienteIni);
          consultaUpdate.executeUpdate();
          consultaUpdate.close();
-         JOptionPane.showMessageDialog(null, "Cliente modificado correctamente\n");
+         JOptionPane.showMessageDialog(null, "CLIENTE MODIFICADO CORRECTAMENTE\n");
        }else{          
            PreparedStatement consultaInsert = conex.getConnection().prepareStatement("INSERT INTO DMTICKET.dmt_clientes_mae "
                    + "VALUES(?,?,?,?,?,?,?,?,STR_TO_DATE(?, '%d/%m/%Y'),?,?,?,?,?,?,?,?,CURDATE(),?,?)"); 

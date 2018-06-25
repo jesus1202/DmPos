@@ -334,6 +334,9 @@ public class FormAnulacion extends javax.swing.JFrame {
         String valorTipDocPrincipal =jcbTipoDocumento.getSelectedItem().toString();            
         String valorSeleccionado[] = valorTipDocPrincipal.split(" - ");
         int index = jcbTipoDocumento.getSelectedIndex();
+        for(DocumentosVO temp: DocumentosDAO.consultarDocumentos()){
+            jcbTipoDocumento2.addItem(temp.getTIPODOCUMENTO() + " - " + temp.getDOCUMENTO());
+        }
         if(valorSeleccionado[0].equals("07")){
             jcbTipoDocumento1.setSelectedItem(valorTipDocPrincipal);
             jcbTipoDocumento1.setEnabled(false);

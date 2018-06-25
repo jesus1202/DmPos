@@ -24,7 +24,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+
 import javax.swing.JOptionPane;
+import jxl.format.Pattern;
 
 
 /**
@@ -150,7 +153,19 @@ public class FormUserMaintainer extends javax.swing.JFrame {
 
         jcbTpersona.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 - Natural", "2 - Jurídical" }));
 
+        txtNombres.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombresKeyTyped(evt);
+            }
+        });
+
         jcbSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M - Masculino", "F - Femenino" }));
+
+        txtDireccion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDireccionKeyTyped(evt);
+            }
+        });
 
         jcbDepa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -161,6 +176,12 @@ public class FormUserMaintainer extends javax.swing.JFrame {
         jcbProv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcbProvActionPerformed(evt);
+            }
+        });
+
+        txtEmail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtEmailKeyTyped(evt);
             }
         });
 
@@ -414,18 +435,18 @@ public class FormUserMaintainer extends javax.swing.JFrame {
                 DocSunatDAO.getByIndex(jcbDocSunat.getSelectedIndex()).getCodigo(),
                 txtNumDocu.getText(),
                 jcbTpersona.getSelectedItem().toString().substring(0,1),
-                txtNombres.getText(),
+                txtNombres.getText().toUpperCase(),
                 jcbSexo.getSelectedItem().toString().substring(0,1),
                 fecNacimiento.getText(),
-                txtDireccion.getText(),
+                txtDireccion.getText().toUpperCase(),
                 DistritoDAO.getByIndex(jcbDistri.getSelectedIndex()).getCodDistrito(),
-                txtEmail.getText(),
+                txtEmail.getText().toUpperCase(),
                 txtTelefono1.getText(),
                 txtTelefono2.getText(),
                 txtCelular.getText(),
                 jcbEstado.getSelectedItem().toString().substring(0,1)
                 );
-        
+        this.setVisible(false);
         
     }//GEN-LAST:event_btnOKPassChangeActionPerformed
 
@@ -584,6 +605,33 @@ public class FormUserMaintainer extends javax.swing.JFrame {
                 
         }
     }//GEN-LAST:event_txtNumDocumentoBuscarKeyTyped
+
+    private void txtNombresKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombresKeyTyped
+        // TODO add your handling code here:
+        char kc = (char) evt.getKeyChar();
+        if(Util.validaSoloLetras(kc)== false){
+            Toolkit.getDefaultToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombresKeyTyped
+
+    private void txtDireccionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDireccionKeyTyped
+        // TODO add your handling code here:
+        char kc = (char) evt.getKeyChar();
+        if(Util.validaCaracterDireccion(kc)== false){
+            Toolkit.getDefaultToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtDireccionKeyTyped
+
+    private void txtEmailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmailKeyTyped
+        // TODO add your handling code here:
+        char kc = (char) evt.getKeyChar();
+        if(Util.validaCaracterEmail(kc)== false){
+            Toolkit.getDefaultToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtEmailKeyTyped
     
     private void cargarComboProvincia(String codigoDepartamento){
         jcbProv.removeAllItems();
@@ -611,6 +659,7 @@ public class FormUserMaintainer extends javax.swing.JFrame {
         //this.setIconImage(new ImageIcon(path+"logowindow.png").getImage());         
         
     }
+   
     private void loadComboDepartamento(){
         for(DepartamentoVO temp: DepartamentoDAO.consultarDepartamentos()){
             jcbDepa.addItem(temp.getDepartamento());

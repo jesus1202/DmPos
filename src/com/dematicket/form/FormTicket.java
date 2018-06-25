@@ -756,10 +756,17 @@ public class FormTicket extends javax.swing.JFrame {
             jcbTipoConcepto.addItem(temp.getConcepto() + " (S/. " + Util.formatDecimal(temp.getPrecioUnitario().doubleValue()) + ")");
         }
     }
+    private int indexComboTipoDocumento=0;
     private void loadComboTipoDocumento(){
+        int i=0;
         for(DocumentosVO temp: DocumentosDAO.consultarDocumentos()){
+            if(temp.getDOCUMENTO().equals("BOLETA")){
+                indexComboTipoDocumento=i;
+            }
             jcbTipoDocumento.addItem(temp.getTIPODOCUMENTO() + " - " + temp.getDOCUMENTO());
+            i++;
         }
+        jcbTipoDocumento.setSelectedIndex(indexComboTipoDocumento);
     }
     private void loadFechaToFechaProcesoBD(){
         DbConnection conex= new DbConnection();
@@ -839,7 +846,47 @@ public class FormTicket extends javax.swing.JFrame {
         txtFiltro.setText("Filtro Productos...");
     }
     
-    private void calculaTotal(){
+    public static void calculaTotal(){
+        BigDecimal cantidad = new BigDecimal(spnCantidad.getValue().toString().trim());
+        //BigDecimal monto = ConceptoCobroList.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getPrecioUnitario();
+        BigDecimal monto = BigDecimal.ZERO;
+        BigDecimal total = BigDecimal.ZERO;
+        monto.setScale(4, RoundingMode.HALF_UP);
+        monto=ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getPrecioUnitario();
+        total.setScale(4, RoundingMode.HALF_UP);
+        total = cantidad.multiply(monto);
+        
+        if((jcbTipoMoneda.getSelectedItem()!=null) && !(jcbTipoMoneda.getSelectedItem().toString().startsWith("-"))){       
+            String tmoneda="";
+            TipoCambioVO tipoCambio = TipoCambioDAO.consultarTipoCambio();
+            BigDecimal tcambio=new BigDecimal(tipoCambio.getTventa());
+            if(jcbTipoMoneda.getSelectedItem().toString().endsWith("S")){
+                tmoneda="S";
+            }else if(jcbTipoMoneda.getSelectedItem().toString().endsWith("D")){
+                tmoneda="D";
+                //tcambio = new BigDecimal(lblExchangeRate.getText());
+            }
+            ConceptoCobro conceptoCobro =  ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex());
+
+            //BigDecimal precioConvertido=conceptoCobro.getPrecioUnitario();
+            if(!conceptoCobro.getTipomon().equals(tmoneda)){
+                  if(tmoneda.equals("S")){
+                      monto= monto.multiply(tcambio);
+                      total= total.multiply(tcambio);
+                      //this.subtotal = subtotal.multiply(tcambio);
+                  }else if(tmoneda.equals("D")){
+                      monto= monto.divide(tcambio,4, RoundingMode.HALF_UP);
+                      total= total.divide(tcambio,4, RoundingMode.HALF_UP);
+                      //this.subtotal = subtotal.divide(tcambio);
+                  }
+            }
+        }
+        
+        lblPrecioUnitario.setText(Util.formatDecimal(monto.doubleValue()));
+        lblSubTotal.setText(Util.formatDecimal(total.doubleValue()));
+    }
+    
+    public static void calculaTotal2(){
         BigDecimal cantidad = new BigDecimal(spnCantidad.getValue().toString().trim());
         //BigDecimal monto = ConceptoCobroList.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getPrecioUnitario();
         BigDecimal monto = BigDecimal.ZERO;
@@ -911,6 +958,10 @@ public class FormTicket extends javax.swing.JFrame {
             if((txtRUCDNI.getText().trim().equals(""))){
                 JOptionPane.showMessageDialog(null, "POR FAVOR INGRESE RUC DEL CLIENTE", "DmPos", JOptionPane.WARNING_MESSAGE);
                 return;
+            }            
+            if((txtRUCDNI.getText().length()<10)){
+                JOptionPane.showMessageDialog(null, "EL NUMERO DE DOCUMENTO NO CORRESPONDE A UN RUC", "DmPos", JOptionPane.WARNING_MESSAGE);
+                return;
             }
             if((txtDireccionP.getText().trim().equals(""))){
                 JOptionPane.showMessageDialog(null, "POR FAVOR INGRESE DIRECCIÓN DEL CLIENTE", "DmPos", JOptionPane.WARNING_MESSAGE);
@@ -955,6 +1006,7 @@ public class FormTicket extends javax.swing.JFrame {
             aumentaSerieNumero();
             //grabarDataUsers();
             limpiarTicket();
+            
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -1193,6 +1245,7 @@ public class FormTicket extends javax.swing.JFrame {
         txtDireccionP.setText("");
         spnCantidad.setValue(0);
         btnImprimir.setEnabled(false);
+        jcbTipoDocumento.setSelectedIndex(indexComboTipoDocumento);
     }
     
     private void writeCabecera(File file) throws IOException{
@@ -3101,7 +3154,7 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     public static javax.swing.JComboBox jcbTipoConcepto;
     public static javax.swing.JComboBox jcbTipoDocumento;
-    public javax.swing.JComboBox<String> jcbTipoMoneda;
+    public static javax.swing.JComboBox<String> jcbTipoMoneda;
     private javax.swing.JPanel jpnHeader;
     private javax.swing.JPanel jpnUsuario;
     private javax.swing.JLabel labelCantidad;
@@ -3116,8 +3169,8 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblFechaProceso;
     private javax.swing.JLabel lblImagen;
-    private javax.swing.JTextField lblPrecioUnitario;
-    private javax.swing.JTextField lblSubTotal;
+    public static javax.swing.JTextField lblPrecioUnitario;
+    public static javax.swing.JTextField lblSubTotal;
     private javax.swing.JTextField lblTicket;
     private javax.swing.JTextField lblTotal;
     private javax.swing.JLabel lblTurno;
@@ -3126,7 +3179,7 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JLabel scrambledLabel2;
     private javax.swing.JLabel scrambledLabel3;
     private javax.swing.JLabel scrambledLabel4;
-    private javax.swing.JSpinner spnCantidad;
+    public static javax.swing.JSpinner spnCantidad;
     public static javax.swing.JTextField txtCliente;
     public static javax.swing.JTextField txtDireccionP;
     private javax.swing.JTextField txtFiltro;

@@ -4,6 +4,8 @@ import com.dematicket.bean.ConceptoCobro;
 import com.dematicket.bean.MonedaVO;
 import com.dematicket.data.ConceptosDAO;
 import com.dematicket.data.MonedasDAO;
+import static com.dematicket.form.FormTicket.calculaTotal;
+import static com.dematicket.form.FormTicket.calculaTotal2;
 import static com.dematicket.form.FormTicket.jcbTipoConcepto;
 import com.dematicket.util.Util;
 import java.awt.Dialog;
@@ -262,6 +264,8 @@ public class FormProductMaintainer extends javax.swing.JFrame {
             for(ConceptoCobro temp: ConceptosDAO.getConceptos()){
                 jcbTipoConcepto.addItem(temp.getConcepto() + " (S/. " + Util.formatDecimal(temp.getPrecioUnitario().doubleValue()) + ")");
             }
+            ConceptosDAO.resetListConceptos();
+            calculaTotal();
             //this.setVisible(false);
     }
     private void txtCodArtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodArtActionPerformed
