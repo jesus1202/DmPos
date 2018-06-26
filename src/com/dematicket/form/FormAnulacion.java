@@ -334,8 +334,13 @@ public class FormAnulacion extends javax.swing.JFrame {
         String valorTipDocPrincipal =jcbTipoDocumento.getSelectedItem().toString();            
         String valorSeleccionado[] = valorTipDocPrincipal.split(" - ");
         int index = jcbTipoDocumento.getSelectedIndex();
+        jcbTipoDocumento2.removeAllItems();
         for(DocumentosVO temp: DocumentosDAO.consultarDocumentos()){
             jcbTipoDocumento2.addItem(temp.getTIPODOCUMENTO() + " - " + temp.getDOCUMENTO());
+        }
+        jcbTipoDocumento1.removeAllItems();
+        for(DocumentosVO temp: DocumentosDAO.consultarDocumentos()){
+            jcbTipoDocumento1.addItem(temp.getTIPODOCUMENTO() + " - " + temp.getDOCUMENTO());
         }
         if(valorSeleccionado[0].equals("07")){
             jcbTipoDocumento1.setSelectedItem(valorTipDocPrincipal);
@@ -358,6 +363,7 @@ public class FormAnulacion extends javax.swing.JFrame {
             jcbTipoDocumento2.setVisible(false);
             jcbMotivo.setVisible(false);
             esNotaCredito=false;
+            jcbTipoDocumento1.setEnabled(true);
         }
     }
     
@@ -1136,7 +1142,17 @@ public class FormAnulacion extends javax.swing.JFrame {
                 escribir.write(ventasCabeceraVO.getTIPODOCUMENTO());
                 escribir.write(Util.FILE_DELIMITADOR);//0
                 escribir.write(ventasCabeceraVO.getSERIE()+"-"+Util.completarIzquierda(8, ""+ventasCabeceraVO.getNUMERO(), "0"));
-                for(int z=0; z<4;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                if(esNotaCredito){
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(ventasCabeceraVO.getTIPODOC_REF());
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(ventasCabeceraVO.getSERIE_REF()+"-"+Util.completarIzquierda(8, ""+ventasCabeceraVO.getNUMERO_REF(), "0"));
+                    escribir.write(Util.FILE_DELIMITADOR);
+                    escribir.write(MotivoDAO.getByIndex(jcbMotivo.getSelectedIndex()).getMOTIVO());                    
+                    escribir.write(Util.FILE_DELIMITADOR);
+                }else{
+                    for(int z=0; z<4;z++) escribir.write(Util.FILE_DELIMITADOR);//0
+                }                
                 escribir.write(SesionData.getSesion().getFechaProceso().replaceAll("/", "-"));
                 escribir.write(Util.FILE_DELIMITADOR);//0
                 escribir.write((ventasCabeceraVO.getTIPOMONEDA().equals("S")?"PEN":"USD"));

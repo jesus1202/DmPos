@@ -1423,14 +1423,16 @@ public class FormTicket extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
             }
             //descomentar al momento de pasarlo
-//            if(!ventasDAO.insertaCabeceraOracleVentas(ventasCabeceraVO)){
-//                resultado="";
-//                JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA EN OASIS", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
-//            }else if(!ventasDAO.actualizaCabeceraVentas(ventasCabeceraVO)){
-//                    resultado="";
-//                    JOptionPane.showMessageDialog(null, "NO SE PUDO ACTUALIZAR ESTADO DE LA CABECERA DE LA VENTA", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
-//            }          
             
+            if(UsuarioData.getUsuario().getEmpresa().equals("1")){
+                if(!ventasDAO.insertaCabeceraOracleVentas(ventasCabeceraVO)){
+                    resultado="";
+                    JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR LA CABECERA DE LA VENTA EN OASIS", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+                }else if(!ventasDAO.actualizaCabeceraVentas(ventasCabeceraVO)){
+                        resultado="";
+                        JOptionPane.showMessageDialog(null, "NO SE PUDO ACTUALIZAR ESTADO DE LA CABECERA DE LA VENTA", "DeMaTicket", JOptionPane.ERROR_MESSAGE);
+                }          
+            }
         }catch(Exception ex){
             resultado="";
             ex.printStackTrace();
