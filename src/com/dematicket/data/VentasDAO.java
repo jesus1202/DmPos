@@ -30,7 +30,7 @@ public class VentasDAO {
     */   
     /*VentasCabeceraVO ventasCabeceraVO;
     VentasDetalleVO ventasDetalleVO;*/
-    boolean resultado=true;
+    static boolean resultado=true;
     
     public boolean insertaCabeceraVentas(VentasCabeceraVO ventasCabeceraVO){
        DbConnection conex= new DbConnection(); 

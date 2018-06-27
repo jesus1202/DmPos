@@ -18,6 +18,8 @@ import com.dematicket.data.SesionData;
 import com.dematicket.data.TipoCambioDAO;
 import com.dematicket.data.UsuarioData;
 import com.dematicket.data.VentasDAO;
+
+import static com.dematicket.form.ForrFormaPago.txtTotalPagar;
 import com.dematicket.print.DirectPrinterT88V;
 import com.dematicket.util.DbConnection;
 import com.dematicket.util.NumberToLetterConverter;
@@ -84,7 +86,9 @@ public class FormTicket extends javax.swing.JFrame {
     private FormAnulacion formAnulacion;
     private FormUserMaintainer formUserMaintainer;
     private FormProductMaintainer formProductMaintainer;
-    private FormExchangeRate formExchangeRate;    
+    private FormExchangeRate formExchangeRate;  
+    private ForrFormaPago FormFormaPago;
+    
     /**
      * Creates new form FormTicket
      */
@@ -153,6 +157,7 @@ public class FormTicket extends javax.swing.JFrame {
         labelSubTotal = new javax.swing.JLabel();
         lblSubTotal = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
         btnAgregar = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
@@ -259,6 +264,15 @@ public class FormTicket extends javax.swing.JFrame {
         lblSubTotal.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblSubTotal.setForeground(new java.awt.Color(204, 0, 0));
         lblSubTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jButton1.setText("Forma Pago");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1);
 
         btnAgregar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnAgregar.setText("Agregar");
@@ -440,20 +454,20 @@ public class FormTicket extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(labelTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jcbTipoConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnProdcutMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(34, 34, 34)
                                 .addComponent(labelCantidad1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(lblPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(labelCantidad)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -946,6 +960,25 @@ public class FormTicket extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_spnCantidadStateChanged
 
+    private void seleccionarMedioPago(){
+        if(FormFormaPago==null){
+            FormFormaPago = new ForrFormaPago();
+            
+            txtTotalPagar.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
+            FormFormaPago.calculaMonto();
+                    
+            FormFormaPago.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            FormFormaPago.setLocationRelativeTo(null);
+            FormFormaPago.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+            FormFormaPago.setVisible(true);
+        }else{
+            txtTotalPagar.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
+            FormFormaPago.calculaMonto();
+            FormFormaPago.setVisible(true);
+        }
+    }
+    
+    
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
         // TODO add your handling code here:
         String valor= jcbTipoDocumento.getSelectedItem().toString();
@@ -1009,7 +1042,10 @@ public class FormTicket extends javax.swing.JFrame {
             
         }catch(Exception ex){
             ex.printStackTrace();
-        }
+        } 
+        
+        
+        
     }//GEN-LAST:event_btnImprimirActionPerformed
 
     private void completaTicket(){
@@ -1933,7 +1969,7 @@ public class FormTicket extends javax.swing.JFrame {
         }
         return resultado;
     }
-    
+    static BigDecimal totalTemporal = BigDecimal.ZERO;
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         String valor= jcbTipoDocumento.getSelectedItem().toString();
         String valorSeleccionado[] = valor.split(" - ");
@@ -2046,8 +2082,8 @@ public class FormTicket extends javax.swing.JFrame {
         lblSubTotal.getText()};
         modelo.addRow(object);
         lblTotal.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
-        btnImprimir.setEnabled(true);       
-        
+        //btnImprimir.setEnabled(true);       
+        totalTemporal= new BigDecimal(ticket.getTotal().doubleValue());
     }//GEN-LAST:event_btnAgregarActionPerformed
   
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -3034,6 +3070,13 @@ public class FormTicket extends javax.swing.JFrame {
             formProductMaintainer.setVisible(true);
         }
     }//GEN-LAST:event_btnProdcutMaintenanceActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+        
+        seleccionarMedioPago();
+    }//GEN-LAST:event_jButton1ActionPerformed
  
 //jcastillo fin           
     private void sendFile(){
@@ -3140,7 +3183,7 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminarDetalle;
     private javax.swing.JButton btnExchangeRate;
     private javax.swing.JButton btnImprimeCuadre;
-    private javax.swing.JButton btnImprimir;
+    public static javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnIniciarDia;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnProdcutMaintenance;
@@ -3148,12 +3191,13 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnSincronizar;
     private javax.swing.JButton btnUserMaintenance;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    public static javax.swing.JTable jTable1;
     public static javax.swing.JComboBox jcbTipoConcepto;
     public static javax.swing.JComboBox jcbTipoDocumento;
     public static javax.swing.JComboBox<String> jcbTipoMoneda;
@@ -3169,13 +3213,13 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JLabel lblCompania;
     public static javax.swing.JTextField lblExchangeRate;
     private javax.swing.JLabel lblFecha;
-    private javax.swing.JLabel lblFechaProceso;
+    public static javax.swing.JLabel lblFechaProceso;
     private javax.swing.JLabel lblImagen;
     public static javax.swing.JTextField lblPrecioUnitario;
     public static javax.swing.JTextField lblSubTotal;
-    private javax.swing.JTextField lblTicket;
+    public static javax.swing.JTextField lblTicket;
     private javax.swing.JTextField lblTotal;
-    private javax.swing.JLabel lblTurno;
+    public static javax.swing.JLabel lblTurno;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JLabel lblVersion;
     private javax.swing.JLabel scrambledLabel2;
