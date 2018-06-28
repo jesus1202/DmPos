@@ -4,15 +4,19 @@ import com.dematicket.bean.ClienteVO;
 import com.dematicket.bean.MedioPagoVO;
 import com.dematicket.bean.MonedaVO;
 import com.dematicket.bean.Ticket;
+import com.dematicket.bean.TipoCambioVO;
 import com.dematicket.data.ClienteData;
 import com.dematicket.data.MedioPagoDAO;
 import com.dematicket.data.MonedasDAO;
 import com.dematicket.data.SesionData;
+import com.dematicket.data.TipoCambioDAO;
 import com.dematicket.data.UsuarioData;
 import com.dematicket.data.VentasDAO;
 import static com.dematicket.form.FormTicket.btnImprimir;
 import static com.dematicket.form.FormTicket.jTable1;
 import static com.dematicket.form.FormTicket.jcbTipoDocumento;
+import static com.dematicket.form.FormTicket.jcbTipoMoneda;
+import static com.dematicket.form.FormTicket.lblExchangeRate;
 import static com.dematicket.form.FormTicket.lblFechaProceso;
 import static com.dematicket.form.FormTicket.lblTicket;
 import static com.dematicket.form.FormTicket.lblTurno;
@@ -26,6 +30,7 @@ import com.dematicket.util.Util;
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -39,11 +44,13 @@ import javax.swing.table.DefaultTableModel;
 public class ForrFormaPago extends javax.swing.JFrame {
     private DefaultTableModel modelo;
     String cabecera = "";
+    String moneda="";
     ArrayList<String> detalle = new ArrayList();
     BigDecimal monto = BigDecimal.ZERO;
     BigDecimal monto2 = BigDecimal.ZERO;
     BigDecimal temporal3 = BigDecimal.ZERO;
     private Ticket ticket = null;
+    private int index=0;
     /**
      * Creates new form FormTicket
      */
@@ -153,6 +160,11 @@ public class ForrFormaPago extends javax.swing.JFrame {
         jLabel1.setText("Moneda : ");
 
         jcbMonedaFP.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcbMonedaFP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jcbMonedaFPActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("SubTotal : ");
@@ -160,6 +172,8 @@ public class ForrFormaPago extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Total a Pagar :");
 
+        txtTotalPagar.setEditable(false);
+        txtTotalPagar.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         txtTotalPagar.setToolTipText("");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -199,7 +213,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(txtSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(23, Short.MAX_VALUE))
+                        .addContainerGap(26, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -235,7 +249,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelTotal))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -243,15 +257,31 @@ public class ForrFormaPago extends javax.swing.JFrame {
 
     private void btnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarActionPerformed
         // TODO add your handling code here:
+        if(jcbFP.getSelectedItem().toString().startsWith("-")){
+            JOptionPane.showMessageDialog(null, "DEBE SELECCIONAR LA FORMA DE PAGO", "DmPos", JOptionPane.WARNING_MESSAGE);            
+            return;  
+        }
         
+        if(jcbMonedaFP.getSelectedItem().toString().startsWith("-")){
+            JOptionPane.showMessageDialog(null, "DEBE SELECCIONAR EL TIPO DE MONEDA", "DmPos", JOptionPane.WARNING_MESSAGE);            
+            return;  
+        }  
+        
+        if(txtSubTotal.getText().trim().length()==0){
+            JOptionPane.showMessageDialog(null, "DEBE INGRESAR UN MONTO A PAGAR", "DmPos", JOptionPane.WARNING_MESSAGE);            
+            return;  
+        } 
+                
         BigDecimal temporal1 = BigDecimal.ZERO;
         BigDecimal temporal2 = BigDecimal.ZERO;
         
-        temporal1= new BigDecimal(txtSubTotal.getText());
+        temporal1= new BigDecimal(txtSubTotal.getText());//monto que se desea pagar
         
-        temporal2= new BigDecimal(txtTotalPagar.getText());
+        temporal2= new BigDecimal(txtTotalPagar.getText());//monto que se tiene que pagar
         
-        if(temporal3.compareTo(temporal2)<0){
+        BigDecimal tcambio= new BigDecimal(lblExchangeRate.getText());
+        
+        if(temporal1.compareTo(temporal2)<=0){
             temporal2 = temporal2.subtract(temporal1);
             monto2=temporal1;
             monto2=monto2.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -259,11 +289,46 @@ public class ForrFormaPago extends javax.swing.JFrame {
 
             String tpago=MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getDESCRIPCION();
             Object [] object = new Object[]{
+                (index+1),
                   tpago,
+                 moneda,
                  monto2
             };
             modelo.addRow(object);
-            temporal3= temporal3.add(monto2);
+            String valorTipDoc =jcbTipoDocumento.getSelectedItem().toString();            
+            String valorSeleccionado[] = valorTipDoc.split(" - ");
+            
+            BigDecimal montori=BigDecimal.ZERO;
+            BigDecimal montoLoc=BigDecimal.ZERO;
+            BigDecimal montoExt=BigDecimal.ZERO;
+            
+            if(moneda.equals("D")){
+                montori=monto2.multiply(tcambio);
+                montoLoc=monto2.multiply(tcambio);
+                montoExt=monto2;
+            }else{
+                montori=monto2;
+                montoLoc=monto2;
+                montoExt=monto2.divide(tcambio,2,RoundingMode.HALF_UP);
+            }
+            
+            MedioPagoDAO.insertaMedioPago(UsuarioData.getUsuario().getEmpresa(), 
+                    valorSeleccionado[0], 
+                    SesionData.getSesion().getSerie(), 
+                    Util.completarIzquierda(8, SesionData.getSesion().getNumero()+"", "0"), 
+                    (index+1), 
+                    MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getFPAGOID(), 
+                    MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getSUBFPAGOID(), 
+                    MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getFPAGOID_SUNAT(), 
+                    moneda,
+                    montori, 
+                    montoLoc, 
+                    montoExt);
+            
+            
+       
+            
+            temporal3= temporal3.add(monto2);//acumulador de lo que se viene pagando
 
 
             lblTotal.setText(Util.formatDecimal((temporal3.doubleValue())));
@@ -271,8 +336,8 @@ public class ForrFormaPago extends javax.swing.JFrame {
             if(temporal2.compareTo(BigDecimal.ZERO)==0){
                 btnImprimir.setEnabled(true);
             }
-            
-            
+            txtSubTotal.setText("");
+            index++;
             
         }else{
             JOptionPane.showMessageDialog(null, "NO SE PUEDE PAGAR UN MONTO MAYOR A LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
@@ -280,10 +345,60 @@ public class ForrFormaPago extends javax.swing.JFrame {
         
         //temporal= 
     }//GEN-LAST:event_btnPagarActionPerformed
+
+    private void jcbMonedaFPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbMonedaFPActionPerformed
+        // TODO add your handling code here:
+        String valorTipDocPrincipal =jcbTipoMoneda.getSelectedItem().toString();
+        BigDecimal tcambio= new BigDecimal(lblExchangeRate.getText());
+        //calculaMonto();
+        if(!jcbMonedaFP.getSelectedItem().toString().startsWith("-")){
+//            if(temporal3.compareTo(BigDecimal.ZERO)==0){
+//                    temporal3= new BigDecimal(txtTotalPagar.getText());
+//            } 
+            if((valorTipDocPrincipal.startsWith("Dolar")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Soles"))){                       
+                    temporal3= temporal3.multiply(tcambio);
+                    moneda="S";
+                
+            }else{
+                if((valorTipDocPrincipal.startsWith("Soles")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Dolar"))){
+                    temporal3= temporal3.divide(tcambio,2,RoundingMode.HALF_UP);
+                    moneda="D";
+                }else{
+                    if((moneda.equals("D")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Soles"))){
+                        temporal3= temporal3.multiply(tcambio);
+                        moneda="S";
+                    }
+                    if((moneda.equals("S")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Dolar"))){
+                        temporal3= temporal3.divide(tcambio,2,RoundingMode.HALF_UP);
+                        moneda="D";
+                    }
+
+                }
+                
+            }
+            temporal3=temporal3.setScale(2, BigDecimal.ROUND_HALF_UP);
+            
+            if(temporal3.compareTo(BigDecimal.ZERO)==0){
+                txtTotalPagar.setText(txtTotalPagar.getText());
+            }
+            
+        }
+        
+        
+    }//GEN-LAST:event_jcbMonedaFPActionPerformed
     public void calculaMonto(){
         monto = totalTemporal;
         monto=monto.setScale(2, BigDecimal.ROUND_HALF_UP);
-        txtTotalPagar.setText(Util.formatDecimal((monto.subtract(monto2).doubleValue())));
+        txtTotalPagar.setText(Util.formatDecimal((monto.subtract(temporal3).doubleValue())));
+    }
+    public void seleccionaMoneda(){
+        String valorTipDocPrincipal =jcbTipoMoneda.getSelectedItem().toString();
+        jcbMonedaFP.setSelectedItem(valorTipDocPrincipal);
+        if(valorTipDocPrincipal.startsWith("Dolar")){
+            moneda="D";
+        }else{
+            moneda="S";
+        }
     }
     private void loadComponentes(){
         String path = new File ("").getAbsolutePath();
@@ -302,7 +417,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
             new Object [][] {
             },
             new Object [] {
-                "FORMA PAGO", "SUBTOTAL"
+                "ID","FORMA PAGO","MONEDA","SUBTOTAL"
             });       
         jTable1.setModel(modelo);
         loadCombos();

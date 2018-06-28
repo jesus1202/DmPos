@@ -966,7 +966,7 @@ public class FormTicket extends javax.swing.JFrame {
             
             txtTotalPagar.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
             FormFormaPago.calculaMonto();
-                    
+            FormFormaPago.seleccionaMoneda();        
             FormFormaPago.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             FormFormaPago.setLocationRelativeTo(null);
             FormFormaPago.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -974,6 +974,7 @@ public class FormTicket extends javax.swing.JFrame {
         }else{
             txtTotalPagar.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
             FormFormaPago.calculaMonto();
+            FormFormaPago.seleccionaMoneda();
             FormFormaPago.setVisible(true);
         }
     }
@@ -2082,7 +2083,7 @@ public class FormTicket extends javax.swing.JFrame {
         lblSubTotal.getText()};
         modelo.addRow(object);
         lblTotal.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
-        //btnImprimir.setEnabled(true);       
+        btnImprimir.setEnabled(false);       
         totalTemporal= new BigDecimal(ticket.getTotal().doubleValue());
     }//GEN-LAST:event_btnAgregarActionPerformed
   
