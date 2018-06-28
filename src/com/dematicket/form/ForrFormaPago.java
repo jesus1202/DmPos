@@ -1,40 +1,25 @@
 package com.dematicket.form;
 
-import com.dematicket.bean.ClienteVO;
 import com.dematicket.bean.MedioPagoVO;
 import com.dematicket.bean.MonedaVO;
 import com.dematicket.bean.Ticket;
-import com.dematicket.bean.TipoCambioVO;
-import com.dematicket.data.ClienteData;
 import com.dematicket.data.MedioPagoDAO;
 import com.dematicket.data.MonedasDAO;
 import com.dematicket.data.SesionData;
-import com.dematicket.data.TipoCambioDAO;
 import com.dematicket.data.UsuarioData;
-import com.dematicket.data.VentasDAO;
 import static com.dematicket.form.FormTicket.btnImprimir;
-import static com.dematicket.form.FormTicket.jTable1;
 import static com.dematicket.form.FormTicket.jcbTipoDocumento;
 import static com.dematicket.form.FormTicket.jcbTipoMoneda;
 import static com.dematicket.form.FormTicket.lblExchangeRate;
-import static com.dematicket.form.FormTicket.lblFechaProceso;
-import static com.dematicket.form.FormTicket.lblTicket;
-import static com.dematicket.form.FormTicket.lblTurno;
-import static com.dematicket.form.FormTicket.spnCantidad;
 import static com.dematicket.form.FormTicket.totalTemporal;
-import static com.dematicket.form.FormTicket.txtCliente;
-import static com.dematicket.form.FormTicket.txtDireccionP;
-import static com.dematicket.form.FormTicket.txtRUCDNI;
-import com.dematicket.util.TipoArchivo;
 import com.dematicket.util.Util;
+import java.awt.Toolkit;
 import java.io.File;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -49,6 +34,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
     BigDecimal monto = BigDecimal.ZERO;
     BigDecimal monto2 = BigDecimal.ZERO;
     BigDecimal temporal3 = BigDecimal.ZERO;
+    BigDecimal tempPendiente = BigDecimal.ZERO;
     private Ticket ticket = null;
     private int index=0;
     /**
@@ -92,6 +78,8 @@ public class ForrFormaPago extends javax.swing.JFrame {
         txtSubTotal = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtTotalPagar = new javax.swing.JTextField();
+        btnEliminar = new javax.swing.JButton();
+        btnPagarTotal = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -169,12 +157,26 @@ public class ForrFormaPago extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setText("SubTotal : ");
 
+        txtSubTotal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSubTotalKeyTyped(evt);
+            }
+        });
+
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel3.setText("Total a Pagar :");
 
         txtTotalPagar.setEditable(false);
         txtTotalPagar.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         txtTotalPagar.setToolTipText("");
+
+        btnEliminar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -191,10 +193,16 @@ public class ForrFormaPago extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jcbMonedaFP, 0, 116, Short.MAX_VALUE)
                             .addComponent(txtSubTotal))
-                        .addGap(76, 76, 76)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTotalPagar))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(76, 76, 76)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtTotalPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(10, 10, 10))))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -216,11 +224,22 @@ public class ForrFormaPago extends javax.swing.JFrame {
                         .addContainerGap(26, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnEliminar)
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtTotalPagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addContainerGap())))
         );
+
+        btnPagarTotal.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnPagarTotal.setText("Pagar");
+        btnPagarTotal.setEnabled(false);
+        btnPagarTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagarTotalActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -230,7 +249,8 @@ public class ForrFormaPago extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnPagarTotal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(labelTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -248,7 +268,8 @@ public class ForrFormaPago extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelTotal))
+                    .addComponent(labelTotal)
+                    .addComponent(btnPagarTotal))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -279,7 +300,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
         
         temporal2= new BigDecimal(txtTotalPagar.getText());//monto que se tiene que pagar
         
-        BigDecimal tcambio= new BigDecimal(lblExchangeRate.getText());
+//        BigDecimal tcambio= new BigDecimal(lblExchangeRate.getText());
         
         if(temporal1.compareTo(temporal2)<=0){
             temporal2 = temporal2.subtract(temporal1);
@@ -289,63 +310,78 @@ public class ForrFormaPago extends javax.swing.JFrame {
 
             String tpago=MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getDESCRIPCION();
             Object [] object = new Object[]{
-                (index+1),
                   tpago,
                  moneda,
                  monto2
             };
             modelo.addRow(object);
-            String valorTipDoc =jcbTipoDocumento.getSelectedItem().toString();            
-            String valorSeleccionado[] = valorTipDoc.split(" - ");
-            
-            BigDecimal montori=BigDecimal.ZERO;
-            BigDecimal montoLoc=BigDecimal.ZERO;
-            BigDecimal montoExt=BigDecimal.ZERO;
-            
-            if(moneda.equals("D")){
-                montori=monto2.multiply(tcambio);
-                montoLoc=monto2.multiply(tcambio);
-                montoExt=monto2;
-            }else{
-                montori=monto2;
-                montoLoc=monto2;
-                montoExt=monto2.divide(tcambio,2,RoundingMode.HALF_UP);
-            }
-            
-            MedioPagoDAO.insertaMedioPago(UsuarioData.getUsuario().getEmpresa(), 
-                    valorSeleccionado[0], 
-                    SesionData.getSesion().getSerie(), 
-                    Util.completarIzquierda(8, SesionData.getSesion().getNumero()+"", "0"), 
-                    (index+1), 
-                    MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getFPAGOID(), 
-                    MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getSUBFPAGOID(), 
-                    MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getFPAGOID_SUNAT(), 
-                    moneda,
-                    montori, 
-                    montoLoc, 
-                    montoExt);
-            
-            
-       
-            
+//            String valorTipDoc =jcbTipoDocumento.getSelectedItem().toString();            
+//            String valorSeleccionado[] = valorTipDoc.split(" - ");
+//            
+//            BigDecimal montori=BigDecimal.ZERO;
+//            BigDecimal montoLoc=BigDecimal.ZERO;
+//            BigDecimal montoExt=BigDecimal.ZERO;
+//            
+//            if(moneda.equals("D")){
+//                montori=monto2.multiply(tcambio);
+//                montoLoc=monto2.multiply(tcambio);
+//                montoExt=monto2;
+//            }else{
+//                montori=monto2;
+//                montoLoc=monto2;
+//                montoExt=monto2.divide(tcambio,2,RoundingMode.HALF_UP);
+//            }
+//            boolean estadoMedioPago =
+//            MedioPagoDAO.insertaMedioPago(UsuarioData.getUsuario().getEmpresa(), 
+//                    valorSeleccionado[0], 
+//                    SesionData.getSesion().getSerie(), 
+//                    Util.completarIzquierda(8, SesionData.getSesion().getNumero()+"", "0"), 
+//                    (index+1), 
+//                    MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getFPAGOID(), 
+//                    MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getSUBFPAGOID(), 
+//                    MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getFPAGOID_SUNAT(), 
+//                    moneda,
+//                    montori, 
+//                    montoLoc, 
+//                    montoExt);
+//            
+//            if(estadoMedioPago){
+//                temporal3= temporal3.add(monto2);//acumulador de lo que se viene pagando
+//                lblTotal.setText(Util.formatDecimal((temporal3.doubleValue())));
+//
+//                if(temporal2.compareTo(BigDecimal.ZERO)==0){
+//                    btnImprimir.setEnabled(true);
+//                }
+//                txtSubTotal.setText("");
+//                index++;
+//            }else{
+//                JOptionPane.showMessageDialog(null, "NO SE PUDO INGRESAR EL PAGO", "DmPos", JOptionPane.ERROR_MESSAGE);
+//            }
             temporal3= temporal3.add(monto2);//acumulador de lo que se viene pagando
-
-
             lblTotal.setText(Util.formatDecimal((temporal3.doubleValue())));
-            
             if(temporal2.compareTo(BigDecimal.ZERO)==0){
-                btnImprimir.setEnabled(true);
+                   btnPagarTotal.setEnabled(true);
+            }else{
+                btnPagarTotal.setEnabled(false);
             }
             txtSubTotal.setText("");
-            index++;
-            
+            tempPendiente=temporal2;
         }else{
             JOptionPane.showMessageDialog(null, "NO SE PUEDE PAGAR UN MONTO MAYOR A LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
         }
         
         //temporal= 
     }//GEN-LAST:event_btnPagarActionPerformed
-
+    private BigDecimal recalculaTotalPagar(BigDecimal montoEliminado, BigDecimal montoPendiente){
+        BigDecimal mont= BigDecimal.ZERO;
+        mont=temporal3;
+        montoPendiente= montoPendiente.add(montoEliminado);        
+        mont=mont.subtract(montoEliminado);
+        lblTotal.setText(Util.formatDecimal((mont.doubleValue())));
+        txtTotalPagar.setText(Util.formatDecimal((montoPendiente.doubleValue())));
+        temporal3=mont;
+        return montoPendiente;
+    }
     private void jcbMonedaFPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbMonedaFPActionPerformed
         // TODO add your handling code here:
         String valorTipDocPrincipal =jcbTipoMoneda.getSelectedItem().toString();
@@ -386,11 +422,148 @@ public class ForrFormaPago extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jcbMonedaFPActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        // TODO add your handling code here:
+        int index = jTable1.getSelectedRow();
+        if(index<0){
+            if(modelo.getRowCount()>0){
+                JOptionPane.showMessageDialog(null, "POR FAVOR, PRIMERO SELECCIONE LA FORMA DE PAGO QUE DESEA ELIMINAR ", "DmPos",JOptionPane.WARNING_MESSAGE);
+                return;
+            }else if(modelo.getRowCount()<=0){
+                JOptionPane.showMessageDialog(null, "PRIMERO DEBE INGRESAR UNA FORMA DE PAGO", "DmPos",JOptionPane.ERROR_MESSAGE);
+                return;
+            }            
+        }
+        BigDecimal m = (BigDecimal) modelo.getValueAt(index, 2);
+        tempPendiente=recalculaTotalPagar(m, tempPendiente);
+        modelo.removeRow(index);
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnPagarTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarTotalActionPerformed
+        // TODO add your handling code here:
+        BigDecimal tcambio= new BigDecimal(lblExchangeRate.getText()); 
+        boolean estadoMedioPago =false;
+        for(int i=0; i<modelo.getRowCount();i++){
+            String valorTipDoc =jcbTipoDocumento.getSelectedItem().toString();            
+            String valorSeleccionado[] = valorTipDoc.split(" - ");
+            
+            String codigo="",subcodigo="",codigoSunat="";
+            String medioPagoSeleccionado = (String)modelo.getValueAt(i, 0);
+            
+            for(MedioPagoVO temp: MedioPagoDAO.consultarMedios()){
+                if(temp.getDESCRIPCION().equals(medioPagoSeleccionado)){
+                    codigo=temp.getFPAGOID();
+                    subcodigo=temp.getSUBFPAGOID();
+                    codigoSunat=temp.getFPAGOID_SUNAT();
+                }
+            }
+            BigDecimal montoConvertir=BigDecimal.ZERO;
+            BigDecimal montori=BigDecimal.ZERO;
+            BigDecimal montoLoc=BigDecimal.ZERO;
+            BigDecimal montoExt=BigDecimal.ZERO;
+            montoConvertir = (BigDecimal)modelo.getValueAt(i, 2);
+            if(moneda.equals("D")){
+                montori=montoConvertir.multiply(tcambio);
+                montoLoc=montoConvertir.multiply(tcambio);
+                montoExt=montoConvertir;
+            }else{
+                montori=montoConvertir;
+                montoLoc=montoConvertir;
+                montoExt=montoConvertir.divide(tcambio,2,RoundingMode.HALF_UP);
+            }
+            estadoMedioPago=
+            MedioPagoDAO.insertaMedioPago(UsuarioData.getUsuario().getEmpresa(), 
+                    valorSeleccionado[0], 
+                    SesionData.getSesion().getSerie(), 
+                    Util.completarIzquierda(8, SesionData.getSesion().getNumero()+"", "0"), 
+                    (i+1), 
+                    codigo, 
+                    subcodigo, 
+                    codigoSunat, 
+                    moneda,
+                    montori, 
+                    montoLoc, 
+                    montoExt);
+            
+            if(estadoMedioPago){
+//                temporal3= temporal3.add(montoConvertir);//acumulador de lo que se viene pagando
+//                lblTotal.setText(Util.formatDecimal((temporal3.doubleValue())));
+//                BigDecimal existePorPagar= new BigDecimal(txtTotalPagar.getText());
+//                if(existePorPagar.compareTo(BigDecimal.ZERO)==0){
+//                    btnImprimir.setEnabled(true);
+//                }
+                txtSubTotal.setText("");
+                index++;
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "NO SE PUDO INGRESAR EL PAGO", "DmPos", JOptionPane.ERROR_MESSAGE);
+            }
+         }
+        if(estadoMedioPago){
+            BigDecimal existePorPagar= new BigDecimal(txtTotalPagar.getText());
+            if(existePorPagar.compareTo(BigDecimal.ZERO)==0){
+                btnImprimir.setEnabled(true);
+            }
+            JOptionPane.showMessageDialog(null, "PAGO INGRESADO CORRECTAMENTE, CLICK EN IMPRIMIR", "DmPos", JOptionPane.INFORMATION_MESSAGE);
+            this.setVisible(false);
+        }
+        
+        //inicializa();
+        //lblTotal.setText(Util.formatDecimal((temporal3.doubleValue())));
+        
+    }//GEN-LAST:event_btnPagarTotalActionPerformed
+
+    private void txtSubTotalKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSubTotalKeyTyped
+        // TODO add your handling code here:
+        char kc = (char) evt.getKeyChar();
+        if(Util.validaSoloNumero(kc)== false){
+            Toolkit.getDefaultToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtSubTotalKeyTyped
     public void calculaMonto(){
         monto = totalTemporal;
         monto=monto.setScale(2, BigDecimal.ROUND_HALF_UP);
-        txtTotalPagar.setText(Util.formatDecimal((monto.subtract(temporal3).doubleValue())));
+        
+        if(monto.compareTo(BigDecimal.ZERO)==0){
+            Limpiar();
+            if(jTable1.getRowCount()==0){
+                //FormFormaPago.setVisible(true);
+                lblTotal.setText(Util.formatDecimal((monto.doubleValue())));
+                totalTemporal = BigDecimal.ZERO;
+                btnPagarTotal.setEnabled(false);
+            }else{
+                btnPagarTotal.setEnabled(true);
+            }
+        }else{
+             txtTotalPagar.setText(Util.formatDecimal((monto.subtract(temporal3).doubleValue())));
+        }
+        
+        
     }
+    public void limpiaTabla(){
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i-=1;
+        }
+        monto = BigDecimal.ZERO;
+        monto2 = BigDecimal.ZERO;
+        temporal3 = BigDecimal.ZERO;
+        tempPendiente = BigDecimal.ZERO;
+        lblTotal.setText("");
+    }
+    public void Limpiar(){
+        txtSubTotal.setText("");
+        for (int i = 0; i < jTable1.getRowCount(); i++) {
+            modelo.removeRow(i);
+            i-=1;
+        }
+    }
+//    public void inicializa(){
+//        tempPendiente=BigDecimal.ZERO;
+//        temporal3 = BigDecimal.ZERO;
+//    }
     public void seleccionaMoneda(){
         String valorTipDocPrincipal =jcbTipoMoneda.getSelectedItem().toString();
         jcbMonedaFP.setSelectedItem(valorTipDocPrincipal);
@@ -417,7 +590,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
             new Object [][] {
             },
             new Object [] {
-                "ID","FORMA PAGO","MONEDA","SUBTOTAL"
+                "FORMA PAGO","MONEDA","SUBTOTAL"
             });       
         jTable1.setModel(modelo);
         loadCombos();
@@ -442,7 +615,9 @@ public class ForrFormaPago extends javax.swing.JFrame {
     }
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnPagar;
+    private javax.swing.JButton btnPagarTotal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

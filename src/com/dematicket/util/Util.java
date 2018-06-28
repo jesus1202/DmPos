@@ -434,5 +434,19 @@ public class Util {
     }    
         return false;
     }
-   
+    public static boolean validaSoloNumero(Character c) {
+    int x=0;
+    char Alfab[]={
+    '1','2','3','4','5','6','7','8','9','0','.'};
+    int longitud = Alfab.length;
+    for (int i = 0; i<longitud; i++) {
+        if(c!=(Alfab[i])){ /*aqui evaluo si elcaratér tipeado es distinto a los caracteres válidos*/
+        x++;
+        }
+    }
+    if(x < longitud){
+        return true;
+    }    
+        return false;
+    }
 }

@@ -4,7 +4,9 @@ import com.dematicket.bean.TipoCambioVO;
 import com.dematicket.data.TipoCambioDAO;
 import com.dematicket.data.UsuarioData;
 import static com.dematicket.form.FormTicket.lblExchangeRate;
+import com.dematicket.util.Util;
 import com.toedter.calendar.JCalendar;
+import java.awt.Toolkit;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -63,12 +65,23 @@ public class FormExchangeRate extends javax.swing.JFrame {
                 exchangeRateBuyActionPerformed(evt);
             }
         });
+        exchangeRateBuy.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                exchangeRateBuyKeyTyped(evt);
+            }
+        });
 
         btnOKPassChange.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btnOKPassChange.setText("Grabar");
         btnOKPassChange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOKPassChangeActionPerformed(evt);
+            }
+        });
+
+        exchangeRateSell.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                exchangeRateSellKeyTyped(evt);
             }
         });
 
@@ -167,6 +180,24 @@ public class FormExchangeRate extends javax.swing.JFrame {
            JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR TIPO DE CAMBIO", "DmPos", JOptionPane.WARNING_MESSAGE); 
         }
     }//GEN-LAST:event_btnOKPassChangeActionPerformed
+
+    private void exchangeRateBuyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_exchangeRateBuyKeyTyped
+        // TODO add your handling code here:
+        char kc = (char) evt.getKeyChar();
+        if(Util.validaSoloNumero(kc)== false){
+            Toolkit.getDefaultToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_exchangeRateBuyKeyTyped
+
+    private void exchangeRateSellKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_exchangeRateSellKeyTyped
+        // TODO add your handling code here:
+        char kc = (char) evt.getKeyChar();
+        if(Util.validaSoloNumero(kc)== false){
+            Toolkit.getDefaultToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_exchangeRateSellKeyTyped
 
     private void loadComponentes(){
         String path = new File ("").getAbsolutePath();

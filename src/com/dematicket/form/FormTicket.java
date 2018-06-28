@@ -267,6 +267,7 @@ public class FormTicket extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton1.setText("Forma Pago");
+        jButton1.setEnabled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -966,7 +967,8 @@ public class FormTicket extends javax.swing.JFrame {
             
             txtTotalPagar.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
             FormFormaPago.calculaMonto();
-            FormFormaPago.seleccionaMoneda();        
+            FormFormaPago.seleccionaMoneda();  
+            //FormFormaPago.inicializa();
             FormFormaPago.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             FormFormaPago.setLocationRelativeTo(null);
             FormFormaPago.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -975,6 +977,7 @@ public class FormTicket extends javax.swing.JFrame {
             txtTotalPagar.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
             FormFormaPago.calculaMonto();
             FormFormaPago.seleccionaMoneda();
+            //FormFormaPago.inicializa();
             FormFormaPago.setVisible(true);
         }
     }
@@ -1040,6 +1043,8 @@ public class FormTicket extends javax.swing.JFrame {
             aumentaSerieNumero();
             //grabarDataUsers();
             limpiarTicket();
+            inicializaTablasFormaPago();
+            FormFormaPago.limpiaTabla();
             
         }catch(Exception ex){
             ex.printStackTrace();
@@ -1049,6 +1054,14 @@ public class FormTicket extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnImprimirActionPerformed
 
+    private void inicializaTablasFormaPago(){
+        totalTemporal = BigDecimal.ZERO;
+        if(jTable1.getRowCount()==0){
+            jButton1.setEnabled(false);
+        }else{
+            jButton1.setEnabled(true);
+        }
+    }
     private void completaTicket(){
         ClienteVO clienteVO;
         clienteVO = ClienteData.getClientexNumDoc(txtRUCDNI.getText());
@@ -2085,6 +2098,11 @@ public class FormTicket extends javax.swing.JFrame {
         lblTotal.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
         btnImprimir.setEnabled(false);       
         totalTemporal= new BigDecimal(ticket.getTotal().doubleValue());
+        if(jTable1.getRowCount()==0){
+            jButton1.setEnabled(false);
+        }else{
+            jButton1.setEnabled(true);
+        }
     }//GEN-LAST:event_btnAgregarActionPerformed
   
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -2122,6 +2140,7 @@ public class FormTicket extends javax.swing.JFrame {
         
         ticket.getDetalleTicket().remove(index);
         ticket.calculateTicket();
+        totalTemporal=ticket.getTotal();
         lblTotal.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
         if(ticket.getDetalleTicket().isEmpty()){
             btnImprimir.setEnabled(false);
