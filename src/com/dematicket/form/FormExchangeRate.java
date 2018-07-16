@@ -8,7 +8,12 @@ import com.dematicket.util.Util;
 import com.toedter.calendar.JCalendar;
 import java.awt.Toolkit;
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -29,7 +34,32 @@ public class FormExchangeRate extends javax.swing.JFrame {
         calendar = new JCalendar();
         calendar.setBounds(15, 20, 280, 120);
         //jPanel1.add(calendar);
-        calendar.setEnabled(false);
+        calendar.setEnabled(true);
+        calendar.getDayChooser().addPropertyChangeListener(
+                new java.beans.PropertyChangeListener() {
+ 
+                    @Override
+                    public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                        if (evt.getPropertyName().compareTo("day") == 0) {
+                            SimpleDateFormat formatoDeFecha = new SimpleDateFormat("yyyy-MM-dd");
+                            //txtFechaSeleccionada.setText(formatoDeFecha.format(calendar.getDate()));
+                            //JOptionPane.showMessageDialog(null, formatoDeFecha.format(calendar.getDate()), "DmPos", JOptionPane.WARNING_MESSAGE);         
+                            TipoCambioVO tipoCambioxDia = TipoCambioDAO.consultarTipoCambioxDia(formatoDeFecha.format(calendar.getDate()));
+                            if(tipoCambioxDia == null){
+                                JOptionPane.showMessageDialog(null, 
+                                        "NO EXISTE TIPO DE CAMBIO PARA EL DIA SELECCIONADO", "DmPos", JOptionPane.INFORMATION_MESSAGE);
+                                exchangeRateBuy.setText("");
+                                exchangeRateSell.setText("");
+                                return;
+                            }else{
+                                exchangeRateBuy.setText(tipoCambioxDia.getTcompra());
+                                exchangeRateSell.setText(tipoCambioxDia.getTventa());
+                            }    
+                        }
+                    }
+                });
+        
+        
         jPanel3.add(calendar);
     }
     
@@ -164,20 +194,36 @@ public class FormExchangeRate extends javax.swing.JFrame {
 
     private void exchangeRateBuyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exchangeRateBuyActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_exchangeRateBuyActionPerformed
 
     private void btnOKPassChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKPassChangeActionPerformed
-        // TODO add your handling code here:
-        TipoCambioDAO tipoCambioDAO = new TipoCambioDAO();
-        boolean exito= true;
-        exito= tipoCambioDAO.insertarActualizarTipoCambio(exchangeRateBuy.getText(), exchangeRateSell.getText());        
-        if(exito){
-           JOptionPane.showMessageDialog(null, "TIPO DE CAMBIO GRABADO CORRECTAMENTE", "DmPos", JOptionPane.WARNING_MESSAGE);            
-           TipoCambioVO tipoCambioVO = TipoCambioDAO.consultarTipoCambio();
-           lblExchangeRate.setText(tipoCambioVO.getTventa());
-           this.setVisible(false);
-        }else{
-           JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR TIPO DE CAMBIO", "DmPos", JOptionPane.WARNING_MESSAGE); 
+        try {
+            // TODO add your handling code here:
+            SimpleDateFormat formatoDeFecha = new SimpleDateFormat("yyyy-MM-dd");
+            Date fechaCalendario = formatoDeFecha.parse(formatoDeFecha.format(calendar.getDate()));            
+            java.util.Date fechaActual = new Date();
+            Date actual= formatoDeFecha.parse(formatoDeFecha.format(fechaActual));
+            //JOptionPane.showMessageDialog(null,fechaCalendario.compareTo(actual) , "DmPos", JOptionPane.WARNING_MESSAGE);
+            if(fechaCalendario.compareTo(actual)!= 0 ){
+                JOptionPane.showMessageDialog(null, "NO SE PUEDE GRABAR UN TIPO DE CAMBIO PARA UNA FECHA DISTINTA A LA DE HOY", "DmPos", JOptionPane.WARNING_MESSAGE);
+                exchangeRateBuy.setText("");
+                exchangeRateSell.setText("");
+                return;
+            }            
+            TipoCambioDAO tipoCambioDAO = new TipoCambioDAO();
+            boolean exito= true;
+            exito= tipoCambioDAO.insertarActualizarTipoCambio(exchangeRateBuy.getText(), exchangeRateSell.getText());
+            if(exito){
+                JOptionPane.showMessageDialog(null, "TIPO DE CAMBIO GRABADO CORRECTAMENTE", "DmPos", JOptionPane.WARNING_MESSAGE);
+                TipoCambioVO tipoCambioVO = TipoCambioDAO.consultarTipoCambio();
+                lblExchangeRate.setText(tipoCambioVO.getTventa());
+                this.setVisible(false);
+            }else{ 
+                JOptionPane.showMessageDialog(null, "NO SE PUDO GRABAR TIPO DE CAMBIO", "DmPos", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(FormExchangeRate.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnOKPassChangeActionPerformed
 

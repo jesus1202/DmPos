@@ -47,6 +47,30 @@ public class TipoCambioDAO {
     }
     return tipoCambio;
   }
+  
+  public static TipoCambioVO consultarTipoCambioxDia(String fecha) {
+    tipoCambio = null;
+    DbConnection conex= new DbConnection();
+    try {
+     PreparedStatement consulta = conex.getConnection().prepareStatement("SELECT COMPRA, VENTA "
+             + " FROM DMTICKET.DMT_TCAMBIO_MAE WHERE FECHA = ? AND CIAID=?");
+     consulta.setString(1,fecha);
+     consulta.setString(2,UsuarioData.getUsuario().getEmpresa());
+     ResultSet res = consulta.executeQuery();
+
+     while(res.next()){
+      tipoCambio= new TipoCambioVO();     
+      tipoCambio.setTcompra(res.getString("COMPRA"));
+      tipoCambio.setTventa(res.getString("VENTA"));     
+    }
+    res.close();
+    consulta.close();
+    conex.desconectar();
+    } catch (Exception e) {
+     JOptionPane.showMessageDialog(null, "no se pudo obtener el tipo de compra\n"+e);
+    }
+    return tipoCambio;
+  }
 
   public boolean insertarActualizarTipoCambio(String tcompra, String tventa){
        tipoCambio = consultarTipoCambio();
