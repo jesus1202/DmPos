@@ -37,6 +37,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
     BigDecimal tempPendiente = BigDecimal.ZERO;
     private Ticket ticket = null;
     private int index=0;
+    String monedaTemp="";
     /**
      * Creates new form FormTicket
      */
@@ -79,6 +80,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtTotalPagar = new javax.swing.JTextField();
         btnEliminar = new javax.swing.JButton();
+        lblmoneda = new javax.swing.JLabel();
         btnPagarTotal = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -129,7 +131,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(labelTipo1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jcbFP, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jcbFP, 0, 279, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -178,6 +180,9 @@ public class ForrFormaPago extends javax.swing.JFrame {
             }
         });
 
+        lblmoneda.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblmoneda.setText("jLabel4");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -195,14 +200,17 @@ public class ForrFormaPago extends javax.swing.JFrame {
                             .addComponent(txtSubTotal))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(76, 76, 76)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtTotalPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10))))
+                                .addGap(10, 10, 10))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(39, 39, 39)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtTotalPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblmoneda)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -227,7 +235,9 @@ public class ForrFormaPago extends javax.swing.JFrame {
                         .addComponent(btnEliminar)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtTotalPagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtTotalPagar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblmoneda))
                             .addComponent(jLabel3))
                         .addContainerGap())))
         );
@@ -254,7 +264,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
                         .addComponent(labelTotal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -311,7 +321,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
             String tpago=MedioPagoDAO.getByIndex(jcbFP.getSelectedIndex()).getDESCRIPCION();
             Object [] object = new Object[]{
                   tpago,
-                 moneda,
+                 monedaTemp,
                  monto2
             };
             modelo.addRow(object);
@@ -364,8 +374,12 @@ public class ForrFormaPago extends javax.swing.JFrame {
             }else{
                 btnPagarTotal.setEnabled(false);
             }
-            txtSubTotal.setText("");
+            //txtSubTotal.setText("");
             tempPendiente=temporal2;
+            totalTemporal=temporal2;
+            
+            txtSubTotal.setText(txtTotalPagar.getText());
+            
         }else{
             JOptionPane.showMessageDialog(null, "NO SE PUEDE PAGAR UN MONTO MAYOR A LA VENTA", "DmPos", JOptionPane.ERROR_MESSAGE);
         }
@@ -387,38 +401,65 @@ public class ForrFormaPago extends javax.swing.JFrame {
         String valorTipDocPrincipal =jcbTipoMoneda.getSelectedItem().toString();
         BigDecimal tcambio= new BigDecimal(lblExchangeRate.getText());
         //calculaMonto();
+        String monedaFormaPago = "";
         if(!jcbMonedaFP.getSelectedItem().toString().startsWith("-")){
-//            if(temporal3.compareTo(BigDecimal.ZERO)==0){
-//                    temporal3= new BigDecimal(txtTotalPagar.getText());
-//            } 
-            if((valorTipDocPrincipal.startsWith("Dolar")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Soles"))){                       
-                    temporal3= temporal3.multiply(tcambio);
-                    moneda="S";
-                
-            }else{
-                if((valorTipDocPrincipal.startsWith("Soles")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Dolar"))){
-                    temporal3= temporal3.divide(tcambio,2,RoundingMode.HALF_UP);
-                    moneda="D";
-                }else{
-                    if((moneda.equals("D")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Soles"))){
-                        temporal3= temporal3.multiply(tcambio);
-                        moneda="S";
-                    }
-                    if((moneda.equals("S")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Dolar"))){
-                        temporal3= temporal3.divide(tcambio,2,RoundingMode.HALF_UP);
-                        moneda="D";
-                    }
-
+            if(jcbMonedaFP.getSelectedItem().toString().startsWith("Soles")){
+                monedaFormaPago="S";
+                lblmoneda.setText("Soles");
+            }
+            if(jcbMonedaFP.getSelectedItem().toString().startsWith("Dolar")){
+                monedaFormaPago="D";
+                lblmoneda.setText("Dolares");
+            }
+            
+            BigDecimal temporal2 = BigDecimal.ZERO;
+            temporal2= new BigDecimal(txtTotalPagar.getText());
+            
+            if(!monedaTemp.equals(monedaFormaPago)){
+                if(monedaTemp.equals("D") && monedaFormaPago.equals("S")){
+                    temporal2= temporal2.multiply(tcambio);
+                    monedaTemp="S";
+                    txtTotalPagar.setText(Util.formatDecimal((temporal2.doubleValue())));
+                    txtSubTotal.setText(txtTotalPagar.getText());
                 }
-                
+                if(monedaTemp.equals("S") && monedaFormaPago.equals("D")){
+                    temporal2= temporal2.divide(tcambio,2,RoundingMode.HALF_UP);
+                    monedaTemp="D";
+                    txtTotalPagar.setText(Util.formatDecimal((temporal2.doubleValue())));
+                    txtSubTotal.setText(txtTotalPagar.getText());
+                }
             }
-            temporal3=temporal3.setScale(2, BigDecimal.ROUND_HALF_UP);
-            
-            if(temporal3.compareTo(BigDecimal.ZERO)==0){
-                txtTotalPagar.setText(txtTotalPagar.getText());
-            }
-            
         }
+        
+//        if(!jcbMonedaFP.getSelectedItem().toString().startsWith("-")){
+//            if((valorTipDocPrincipal.startsWith("Dolar")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Soles"))){                       
+//                    temporal3= temporal3.multiply(tcambio);
+//                    moneda="S";
+//                
+//            }else{
+//                if((valorTipDocPrincipal.startsWith("Soles")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Dolar"))){
+//                    temporal3= temporal3.divide(tcambio,2,RoundingMode.HALF_UP);
+//                    moneda="D";
+//                }else{
+//                    if((moneda.equals("D")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Soles"))){
+//                        temporal3= temporal3.multiply(tcambio);
+//                        moneda="S";
+//                    }
+//                    if((moneda.equals("S")) && (jcbMonedaFP.getSelectedItem().toString().startsWith("Dolar"))){
+//                        temporal3= temporal3.divide(tcambio,2,RoundingMode.HALF_UP);
+//                        moneda="D";
+//                    }
+//
+//                }
+//                
+//            }
+//            temporal3=temporal3.setScale(2, BigDecimal.ROUND_HALF_UP);
+//            
+//            if(temporal3.compareTo(BigDecimal.ZERO)==0){
+//                txtTotalPagar.setText(txtTotalPagar.getText());
+//            }
+//            
+//        }
         
         
     }//GEN-LAST:event_jcbMonedaFPActionPerformed
@@ -435,9 +476,64 @@ public class ForrFormaPago extends javax.swing.JFrame {
                 return;
             }            
         }
-        BigDecimal m = (BigDecimal) modelo.getValueAt(index, 2);
-        tempPendiente=recalculaTotalPagar(m, tempPendiente);
+        
+        
+        String valorTipDocPrincipal =jcbTipoMoneda.getSelectedItem().toString();
+        String valorSeleccionadoP[] = valorTipDocPrincipal.split(" - ");
+        String monedaPrincipal=valorSeleccionadoP[0];
+        if(monedaPrincipal.equals("Dolar")){
+            monedaPrincipal="D";
+        }else{
+            monedaPrincipal="S";
+        }
+                        
+        BigDecimal tcambio= new BigDecimal(lblExchangeRate.getText());
+        String monedaTabla = (String)modelo.getValueAt(index, 1);
+        BigDecimal montoTabla = (BigDecimal)modelo.getValueAt(index, 2);
+        if(monedaTabla.equals(monedaPrincipal)){
+            tempPendiente=recalculaTotalPagar(montoTabla, tempPendiente);
+            //totalPagado= totalPagado.add(montoTabla);
+        }else{
+            if(monedaTabla.equals("D")){
+                montoTabla= montoTabla.multiply(tcambio);
+                //montoTabla= montoTabla.divide(tcambio,2,RoundingMode.HALF_UP);
+                tempPendiente=recalculaTotalPagar(montoTabla, tempPendiente);
+                                
+                //totalPagado= totalPagado.add(montoTabla);
+            }else if(monedaTabla.equals("S")){                        
+                montoTabla= montoTabla.divide(tcambio,2,RoundingMode.HALF_UP);
+                tempPendiente=recalculaTotalPagar(montoTabla, tempPendiente);
+                //totalPagado= totalPagado.add(montoTabla);
+            }
+        }
+        
+        BigDecimal totalPagado = BigDecimal.ZERO;
+        for(int i=0; i<modelo.getRowCount();i++){
+            monedaTabla = (String)modelo.getValueAt(i, 1);
+            montoTabla = (BigDecimal)modelo.getValueAt(i, 2);
+            if(monedaTabla.equals(monedaPrincipal)){
+                totalPagado= totalPagado.add(montoTabla);
+            }else{
+                if(monedaTabla.equals("D")){
+                    montoTabla= montoTabla.multiply(tcambio);
+                    totalPagado= totalPagado.add(montoTabla);
+                }else if(monedaTabla.equals("S")){                        
+                    montoTabla= montoTabla.divide(tcambio,2,RoundingMode.HALF_UP);
+                    totalPagado= totalPagado.add(montoTabla);
+                }
+            }
+        }
+        totalTemporal = totalPagado;       
+        //BigDecimal m = (BigDecimal) modelo.getValueAt(index, 2);
+        
         modelo.removeRow(index);
+        
+        
+        if(tempPendiente.compareTo(BigDecimal.ZERO)==0){
+            btnPagarTotal.setEnabled(true);
+        }else{
+            btnPagarTotal.setEnabled(false);
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnPagarTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarTotalActionPerformed
@@ -481,7 +577,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
                     codigo, 
                     subcodigo, 
                     codigoSunat, 
-                    moneda,
+                    monedaTemp,
                     montori, 
                     montoLoc, 
                     montoExt);
@@ -527,20 +623,49 @@ public class ForrFormaPago extends javax.swing.JFrame {
         monto=monto.setScale(2, BigDecimal.ROUND_HALF_UP);
         
         if(monto.compareTo(BigDecimal.ZERO)==0){
-            Limpiar();
-            if(jTable1.getRowCount()==0){
-                //FormFormaPago.setVisible(true);
-                lblTotal.setText(Util.formatDecimal((monto.doubleValue())));
-                totalTemporal = BigDecimal.ZERO;
-                btnPagarTotal.setEnabled(false);
-            }else{
-                btnPagarTotal.setEnabled(true);
-            }
+            txtTotalPagar.setText(Util.formatDecimal((BigDecimal.ZERO.doubleValue())));
+//            Limpiar();
+//            if(jTable1.getRowCount()==0){
+//                //FormFormaPago.setVisible(true);
+//                lblTotal.setText(Util.formatDecimal((monto.doubleValue())));
+//                totalTemporal = BigDecimal.ZERO;
+//                btnPagarTotal.setEnabled(false);
+//            }else{
+//                btnPagarTotal.setEnabled(true);
+//            }
         }else{
-             txtTotalPagar.setText(Util.formatDecimal((monto.subtract(temporal3).doubleValue())));
+            BigDecimal totalPagado = BigDecimal.ZERO;
+            String valorTipDocPrincipal =jcbTipoMoneda.getSelectedItem().toString();
+            String valorSeleccionadoP[] = valorTipDocPrincipal.split(" - ");
+            String monedaPrincipal=valorSeleccionadoP[0];
+            if(monedaPrincipal.equals("Dolar")){
+                monedaPrincipal="D";
+            }else{
+                monedaPrincipal="S";
+            }
+                        
+            BigDecimal tcambio= new BigDecimal(lblExchangeRate.getText());
+            for(int i=0; i<modelo.getRowCount();i++){
+                String monedaTabla = (String)modelo.getValueAt(i, 1);
+                BigDecimal montoTabla = (BigDecimal)modelo.getValueAt(i, 2);
+                if(monedaTabla.equals(monedaPrincipal)){
+                    totalPagado= totalPagado.add(montoTabla);
+                }else{
+                    if(monedaTabla.equals("D")){
+                        montoTabla= montoTabla.multiply(tcambio);
+                        //montoTabla= montoTabla.divide(tcambio,2,RoundingMode.HALF_UP);
+                        totalPagado= totalPagado.add(montoTabla);
+                    }else if(monedaTabla.equals("S")){                        
+                        montoTabla= montoTabla.divide(tcambio,2,RoundingMode.HALF_UP);
+                        totalPagado= totalPagado.add(montoTabla);
+                    }
+                }
+            }
+                    
+            txtTotalPagar.setText(Util.formatDecimal((monto.subtract(totalPagado).doubleValue())));
         }
         
-        
+        txtSubTotal.setText(txtTotalPagar.getText());
     }
     public void limpiaTabla(){
         for (int i = 0; i < jTable1.getRowCount(); i++) {
@@ -565,13 +690,15 @@ public class ForrFormaPago extends javax.swing.JFrame {
 //        temporal3 = BigDecimal.ZERO;
 //    }
     public void seleccionaMoneda(){
-        String valorTipDocPrincipal =jcbTipoMoneda.getSelectedItem().toString();
-        jcbMonedaFP.setSelectedItem(valorTipDocPrincipal);
+        String valorTipDocPrincipal =jcbTipoMoneda.getSelectedItem().toString();        
         if(valorTipDocPrincipal.startsWith("Dolar")){
             moneda="D";
+            monedaTemp="D";
         }else{
             moneda="S";
+            monedaTemp="S";
         }
+        jcbMonedaFP.setSelectedItem(valorTipDocPrincipal);
     }
     private void loadComponentes(){
         String path = new File ("").getAbsolutePath();
@@ -594,6 +721,8 @@ public class ForrFormaPago extends javax.swing.JFrame {
             });       
         jTable1.setModel(modelo);
         loadCombos();
+        labelTotal.setVisible(false);
+        lblTotal.setVisible(false);
     }
     private void loadCombos(){
         for(MedioPagoVO temp: MedioPagoDAO.consultarMedios()){
@@ -630,6 +759,7 @@ public class ForrFormaPago extends javax.swing.JFrame {
     private javax.swing.JLabel labelTipo1;
     private javax.swing.JLabel labelTotal;
     private javax.swing.JTextField lblTotal;
+    private javax.swing.JLabel lblmoneda;
     public static javax.swing.JTextField txtSubTotal;
     public static javax.swing.JTextField txtTotalPagar;
     // End of variables declaration//GEN-END:variables
