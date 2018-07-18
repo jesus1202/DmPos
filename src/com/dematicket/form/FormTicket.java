@@ -809,7 +809,7 @@ public class FormTicket extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addComponent(jpnHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -935,7 +935,8 @@ public class FormTicket extends javax.swing.JFrame {
             },
             new Object [] {
                 "TIPO","PRECIO UNIT.","DESCUENTO","MONEDA", "CANTIDAD", "SUBTOTAL"
-            });       
+            }); 
+        
         jTable1.setModel(modelo);
         //Implementar Reloj
         Reloj reloj = new Reloj(lblFecha);
@@ -1376,6 +1377,13 @@ public class FormTicket extends javax.swing.JFrame {
         lblTurno.setText("TURNO: "+Util.completarIzquierda(8, SesionData.getSesion().getTurno()+"", "0").toUpperCase());
         lblTurno.setHorizontalAlignment(SwingConstants.RIGHT);
         lblTotal.setText("");
+        lblContadorDscto.setText("");
+        lblContadorIGV.setText("");
+        lblContadorSubTotal.setText("");
+        
+        sumaDesc=BigDecimal.ZERO;
+        sumaIGV=BigDecimal.ZERO;
+        sumaSubtotalIgv=BigDecimal.ZERO;
         //jcastillo inicio  
 //        lblTicket.setText(
 //                Util.completarIzquierda(3, ticket.getSerie()+"", "0")
@@ -2203,7 +2211,9 @@ public class FormTicket extends javax.swing.JFrame {
         detalleTicket.getDescItem(),
         tmoneda,
         spnCantidad.getValue().toString().trim(),
-        lblSubTotal.getText()};
+        lblSubTotal.getText(),
+        2
+      };
         modelo.addRow(object);
         lblTotal.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
         btnImprimir.setEnabled(false);       
@@ -2224,6 +2234,10 @@ public class FormTicket extends javax.swing.JFrame {
     private void btnEliminarDetalleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarDetalleActionPerformed
         // TODO add your handling code here:
         int index = jTable1.getSelectedRow();
+        
+//        JOptionPane.showMessageDialog(null, ticket.getDetalleTicket().get(index).getSubtotal().subtract(ticket.getDetalleTicket().get(index).getMontoIgv()), "DmPos",JOptionPane.WARNING_MESSAGE);
+//        JOptionPane.showMessageDialog(null, ticket.getDetalleTicket().get(index).getDescItem(), "DmPos",JOptionPane.WARNING_MESSAGE);
+//        JOptionPane.showMessageDialog(null, ticket.getDetalleTicket().get(index).getMontoIgv(), "DmPos",JOptionPane.WARNING_MESSAGE);
         if(index<0){
             if(modelo.getRowCount()>0){
                 JOptionPane.showMessageDialog(null, "POR FAVOR, PRIMERO SELECCIONE EL DETALLE QUE DESEA ELIMINAR ", "DmPos",JOptionPane.WARNING_MESSAGE);
@@ -2247,6 +2261,15 @@ public class FormTicket extends javax.swing.JFrame {
             ticket.getDetalleTicket().get(index).getConceptoCobro().getExonerado().equals("N")){
             ticket.setMontoInafecto(ticket.getMontoInafecto().subtract(ticket.getDetalleTicket().get(index).getSubtotal()));
         }
+        BigDecimal cantSinIGV = ticket.getDetalleTicket().get(index).getSubtotal().subtract(ticket.getDetalleTicket().get(index).getMontoIgv());
+        sumaSubtotalIgv= sumaSubtotalIgv.subtract(cantSinIGV);
+        sumaDesc= sumaDesc.subtract(ticket.getDetalleTicket().get(index).getDescItem());
+        sumaIGV= sumaIGV.subtract(ticket.getDetalleTicket().get(index).getMontoIgv());
+        
+        lblContadorSubTotal.setText(Util.formatDecimal(sumaSubtotalIgv.doubleValue()));
+        lblContadorDscto.setText(Util.formatDecimal(sumaDesc.doubleValue()));
+        lblContadorIGV.setText(Util.formatDecimal(sumaIGV.doubleValue()));
+        
         
         ticket.getDetalleTicket().remove(index);
         ticket.calculateTicket();
