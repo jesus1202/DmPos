@@ -34,9 +34,7 @@ public class DetalleTicket {
         this.cantidad = cantidad;        
         this.subtotal = conceptoCobro.getPrecioUnitario().multiply(new BigDecimal(cantidad));
         this.descItem = desc.multiply(new BigDecimal(cantidad));
-        if(this.descItem.compareTo(BigDecimal.ZERO)>0){
-            this.subtotal = this.subtotal.subtract(this.descItem);
-        }
+        
         if(!conceptoCobro.getTipomon().equals(tmoneda)){
             if(tmoneda.equals("S")){
                 //conceptoCobro.setPrecioUnitario(conceptoCobro.getPrecioUnitario().multiply(tcambio));
@@ -46,7 +44,9 @@ public class DetalleTicket {
                 this.subtotal = subtotal.divide(tcambio,4, RoundingMode.HALF_UP);                
             }
         }
-        
+        if(this.descItem.compareTo(BigDecimal.ZERO)>0){
+            this.subtotal = this.subtotal.subtract(this.descItem);
+        }
         BigDecimal factor = BigDecimal.ZERO;
         if(conceptoCobro.isAplicaIgv()){
             factor = SesionData.getSesion().getIgvPorcentaje().divide(new BigDecimal(100));

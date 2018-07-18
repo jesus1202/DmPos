@@ -199,6 +199,14 @@ public class FormTicket extends javax.swing.JFrame {
         btnCerrarTurno = new javax.swing.JButton();
         btnIniciarDia = new javax.swing.JButton();
         btnSincronizar = new javax.swing.JButton();
+        labelTotal1 = new javax.swing.JLabel();
+        lblContadorSubTotal = new javax.swing.JTextField();
+        labelTotal2 = new javax.swing.JLabel();
+        lblContadorDscto = new javax.swing.JTextField();
+        labelTotal3 = new javax.swing.JLabel();
+        lblContadorServ = new javax.swing.JTextField();
+        labelTotal4 = new javax.swing.JLabel();
+        lblContadorIGV = new javax.swing.JTextField();
 
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -711,6 +719,42 @@ public class FormTicket extends javax.swing.JFrame {
             }
         });
 
+        labelTotal1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        labelTotal1.setText("SubTotal :");
+
+        lblContadorSubTotal.setEditable(false);
+        lblContadorSubTotal.setColumns(20);
+        lblContadorSubTotal.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblContadorSubTotal.setForeground(new java.awt.Color(204, 0, 0));
+        lblContadorSubTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        labelTotal2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        labelTotal2.setText("Dscto :");
+
+        lblContadorDscto.setEditable(false);
+        lblContadorDscto.setColumns(20);
+        lblContadorDscto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblContadorDscto.setForeground(new java.awt.Color(204, 0, 0));
+        lblContadorDscto.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        labelTotal3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        labelTotal3.setText("Serv :");
+
+        lblContadorServ.setEditable(false);
+        lblContadorServ.setColumns(20);
+        lblContadorServ.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblContadorServ.setForeground(new java.awt.Color(204, 0, 0));
+        lblContadorServ.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        labelTotal4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        labelTotal4.setText("IGV :");
+
+        lblContadorIGV.setEditable(false);
+        lblContadorIGV.setColumns(20);
+        lblContadorIGV.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        lblContadorIGV.setForeground(new java.awt.Color(204, 0, 0));
+        lblContadorIGV.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -721,22 +765,42 @@ public class FormTicket extends javax.swing.JFrame {
                     .addComponent(jpnHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1207, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnReporte)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSincronizar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnImprimeCuadre)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCerrarTurno)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnIniciarDia)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnReporte)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnSincronizar)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnImprimeCuadre)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnCerrarTurno)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnIniciarDia, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 461, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(labelTotal1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblContadorSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(labelTotal2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblContadorDscto, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(labelTotal3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblContadorServ, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(labelTotal4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblContadorIGV, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(7, 7, 7)))
                                 .addComponent(labelTotal)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -745,20 +809,29 @@ public class FormTicket extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addComponent(jpnHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelTotal)
+                    .addComponent(labelTotal1)
+                    .addComponent(lblContadorSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelTotal2)
+                    .addComponent(lblContadorDscto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelTotal3)
+                    .addComponent(lblContadorServ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelTotal4)
+                    .addComponent(lblContadorIGV, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnReporte)
                     .addComponent(btnImprimeCuadre)
                     .addComponent(btnCerrarTurno)
                     .addComponent(btnIniciarDia)
-                    .addComponent(btnSincronizar))
-                .addContainerGap())
+                    .addComponent(btnSincronizar)))
         );
 
         pack();
@@ -2007,6 +2080,9 @@ public class FormTicket extends javax.swing.JFrame {
         return resultado;
     }
     static BigDecimal totalTemporal = BigDecimal.ZERO;
+    static BigDecimal sumaDesc=BigDecimal.ZERO;
+    static BigDecimal sumaIGV=BigDecimal.ZERO;
+    static BigDecimal sumaSubtotalIgv=BigDecimal.ZERO;
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         String valor= jcbTipoDocumento.getSelectedItem().toString();
         String valorSeleccionado[] = valor.split(" - ");
@@ -2073,6 +2149,16 @@ public class FormTicket extends javax.swing.JFrame {
             ticket.setMontoGravado(suma);
         }
         
+        sumaDesc= sumaDesc.add(detalleTicket.getDescItem());
+        BigDecimal importeSinIgv = BigDecimal.ZERO;
+        sumaIGV = sumaIGV.add(detalleTicket.getMontoIgv());
+        importeSinIgv=detalleTicket.getSubtotal().subtract(detalleTicket.getMontoIgv());
+        sumaSubtotalIgv = sumaSubtotalIgv.add(importeSinIgv);
+        
+        lblContadorSubTotal.setText(Util.formatDecimal(sumaSubtotalIgv.doubleValue()));
+        lblContadorDscto.setText(Util.formatDecimal(sumaDesc.doubleValue()));
+        lblContadorServ.setText("0");
+        lblContadorIGV.setText(Util.formatDecimal(sumaIGV.doubleValue()));
         
 //        ticket.setMontoGravado(detalleTicket.getMontoGravado());
 //        ticket.setMontoExonerado(detalleTicket.getMontoExonerado());
@@ -3255,7 +3341,15 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JLabel labelTipo;
     private javax.swing.JLabel labelTipo1;
     private javax.swing.JLabel labelTotal;
+    private javax.swing.JLabel labelTotal1;
+    private javax.swing.JLabel labelTotal2;
+    private javax.swing.JLabel labelTotal3;
+    private javax.swing.JLabel labelTotal4;
     private javax.swing.JLabel lblCompania;
+    private javax.swing.JTextField lblContadorDscto;
+    private javax.swing.JTextField lblContadorIGV;
+    private javax.swing.JTextField lblContadorServ;
+    private javax.swing.JTextField lblContadorSubTotal;
     public static javax.swing.JTextField lblExchangeRate;
     private javax.swing.JLabel lblFecha;
     public static javax.swing.JLabel lblFechaProceso;
