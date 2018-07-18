@@ -122,6 +122,7 @@ public class FormTicket extends javax.swing.JFrame {
                 UsuarioData.getUsuario().getPtoVenta(),true);
         
         jcbTipoMoneda.setSelectedIndex(jcbTipoMoneda.getItemCount()-1);
+        txtDscto.setText("0.0");
     }
     
     /**
@@ -181,6 +182,8 @@ public class FormTicket extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jcbTipoMoneda = new javax.swing.JComboBox<>();
         btnProdcutMaintenance = new javax.swing.JButton();
+        labelCantidad2 = new javax.swing.JLabel();
+        txtDscto = new javax.swing.JTextField();
         jpnHeader = new javax.swing.JPanel();
         lblImagen = new javax.swing.JLabel();
         jpnUsuario = new javax.swing.JPanel();
@@ -408,6 +411,12 @@ public class FormTicket extends javax.swing.JFrame {
             }
         });
 
+        labelCantidad2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        labelCantidad2.setText("Dscto :");
+
+        txtDscto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtDscto.setForeground(new java.awt.Color(204, 0, 0));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -459,16 +468,20 @@ public class FormTicket extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 647, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jcbTipoConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, 377, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnProdcutMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(34, 34, 34)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(labelCantidad1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(lblPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelCantidad2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtDscto, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(labelCantidad)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -534,7 +547,9 @@ public class FormTicket extends javax.swing.JFrame {
                                 .addComponent(labelSubTotal)
                                 .addComponent(lblSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(labelCantidad1)
-                                .addComponent(lblPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(lblPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(labelCantidad2)
+                                .addComponent(txtDscto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnProdcutMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)))
@@ -846,7 +861,7 @@ public class FormTicket extends javax.swing.JFrame {
             new Object [][] {
             },
             new Object [] {
-                "TIPO","PRECIO UNIT.","MONEDA", "CANTIDAD", "SUBTOTAL"
+                "TIPO","PRECIO UNIT.","DESCUENTO","MONEDA", "CANTIDAD", "SUBTOTAL"
             });       
         jTable1.setModel(modelo);
         //Implementar Reloj
@@ -863,6 +878,10 @@ public class FormTicket extends javax.swing.JFrame {
     
     public static void calculaTotal(){
         BigDecimal cantidad = new BigDecimal(spnCantidad.getValue().toString().trim());
+        BigDecimal descuento = BigDecimal.ZERO;
+        if(!txtDscto.getText().trim().equals("")){
+            descuento=new BigDecimal(txtDscto.getText().trim());
+        }
         //BigDecimal monto = ConceptoCobroList.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getPrecioUnitario();
         BigDecimal monto = BigDecimal.ZERO;
         BigDecimal total = BigDecimal.ZERO;
@@ -896,7 +915,11 @@ public class FormTicket extends javax.swing.JFrame {
                   }
             }
         }
-        
+        BigDecimal descItem= BigDecimal.ZERO;
+        descItem=descuento.multiply(cantidad);
+        if(descItem.compareTo(BigDecimal.ZERO)>0){
+            total = total.subtract(descItem);
+        }
         lblPrecioUnitario.setText(Util.formatDecimal(monto.doubleValue()));
         lblSubTotal.setText(Util.formatDecimal(total.doubleValue()));
     }
@@ -2016,7 +2039,7 @@ public class FormTicket extends javax.swing.JFrame {
                 
         DetalleTicket detalleTicket = new DetalleTicket(
                 //ConceptoCobroList.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()), 
-        ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()),cantidad,tmoneda,tcambio);
+        ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()),cantidad,tmoneda,tcambio, new BigDecimal(txtDscto.getText()));
         
         //jcastillo inicio
         //if(modelo.getRowCount()>0 && ConceptoCobroList.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).isAplicaIgv()!=ticket.isAplicaIGV()){
@@ -2091,6 +2114,7 @@ public class FormTicket extends javax.swing.JFrame {
       Object [] object = new Object[]{ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getConcepto(),
             //Util.formatDecimal(ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getPrecioUnitario().doubleValue()),
             Util.formatDecimal(precioConvertido.doubleValue()),
+        detalleTicket.getDescItem(),
         tmoneda,
         spnCantidad.getValue().toString().trim(),
         lblSubTotal.getText()};
@@ -2978,11 +3002,11 @@ public class FormTicket extends javax.swing.JFrame {
                         if(!modelo.getValueAt(0, 2).equals("D")){
                             for(int i=0; i<modelo.getRowCount();i++){
                                 BigDecimal precioUnitario = new BigDecimal((String) modelo.getValueAt(i, 1));
-                                BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 4));
+                                BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 5));
                                 //System.out.println("Antes : "+precioUnitario+"  -  "+subTotal);
                                 tcambio=new BigDecimal(tipoCambio.getTventa());
                                 modelo.setValueAt(Util.formatDecimal((precioUnitario.divide(tcambio,2,RoundingMode.HALF_UP)).doubleValue()), i, 1);
-                                modelo.setValueAt(Util.formatDecimal((subTotal.divide(tcambio,2,RoundingMode.HALF_UP)).doubleValue()), i, 4);
+                                modelo.setValueAt(Util.formatDecimal((subTotal.divide(tcambio,2,RoundingMode.HALF_UP)).doubleValue()), i, 5);
                                 modelo.setValueAt("D",i,2);
                                 //System.out.println("Despues : "+modelo.getValueAt(i, 1)+"  -  "+modelo.getValueAt(i, 4));
                             }
@@ -3018,12 +3042,12 @@ public class FormTicket extends javax.swing.JFrame {
                         if(!modelo.getValueAt(0, 2).equals("S")){
                             for(int i=0; i<modelo.getRowCount();i++){
                                 BigDecimal precioUnitario = new BigDecimal((String) modelo.getValueAt(i, 1));
-                                BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 4));
+                                BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 5));
                                 tcambio=new BigDecimal(tipoCambio.getTventa());
                                 //aca es para modificar
                                 BigDecimal monto =precioUnitario.multiply(tcambio);
                                 modelo.setValueAt(Util.formatDecimal(monto.doubleValue()), i, 1);
-                                modelo.setValueAt(Util.formatDecimal((subTotal.multiply(tcambio)).doubleValue()), i, 4);
+                                modelo.setValueAt(Util.formatDecimal((subTotal.multiply(tcambio)).doubleValue()), i, 5);
                                 modelo.setValueAt("S",i,2);
                                 //System.out.println("Despues : "+modelo.getValueAt(i, 1)+"  -  "+modelo.getValueAt(i, 4));
                             }
@@ -3225,6 +3249,7 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JPanel jpnUsuario;
     private javax.swing.JLabel labelCantidad;
     private javax.swing.JLabel labelCantidad1;
+    private javax.swing.JLabel labelCantidad2;
     private javax.swing.JLabel labelSubTotal;
     private javax.swing.JLabel labelTicket;
     private javax.swing.JLabel labelTipo;
@@ -3248,6 +3273,7 @@ public class FormTicket extends javax.swing.JFrame {
     public static javax.swing.JSpinner spnCantidad;
     public static javax.swing.JTextField txtCliente;
     public static javax.swing.JTextField txtDireccionP;
+    public static javax.swing.JTextField txtDscto;
     private javax.swing.JTextField txtFiltro;
     public static javax.swing.JTextField txtRUCDNI;
     // End of variables declaration//GEN-END:variables

@@ -24,21 +24,26 @@ public class DetalleTicket {
     private BigDecimal montoExonerado = BigDecimal.ZERO;
     private BigDecimal montoInafecto = BigDecimal.ZERO;
     private String aplimpto;
+    private BigDecimal descItem= BigDecimal.ZERO;
     //private String tmoneda;
 
-    public DetalleTicket(ConceptoCobro conceptoCobro, int cantidad, String tmoneda,BigDecimal tcambio) {
+    public DetalleTicket(ConceptoCobro conceptoCobro, int cantidad, String tmoneda,BigDecimal tcambio, BigDecimal desc) {
         this.subtotal.setScale(4, RoundingMode.HALF_DOWN);
         this.montoIgv.setScale(4, RoundingMode.HALF_UP);
         this.conceptoCobro = conceptoCobro;
         this.cantidad = cantidad;        
         this.subtotal = conceptoCobro.getPrecioUnitario().multiply(new BigDecimal(cantidad));
+        this.descItem = desc.multiply(new BigDecimal(cantidad));
+        if(this.descItem.compareTo(BigDecimal.ZERO)>0){
+            this.subtotal = this.subtotal.subtract(this.descItem);
+        }
         if(!conceptoCobro.getTipomon().equals(tmoneda)){
             if(tmoneda.equals("S")){
                 //conceptoCobro.setPrecioUnitario(conceptoCobro.getPrecioUnitario().multiply(tcambio));
-                this.subtotal = subtotal.multiply(tcambio);
+                this.subtotal = subtotal.multiply(tcambio);                
             }else if(tmoneda.equals("D")){
                 //conceptoCobro.setPrecioUnitario(conceptoCobro.getPrecioUnitario().divide(tcambio,2, RoundingMode.HALF_UP));
-                this.subtotal = subtotal.divide(tcambio,4, RoundingMode.HALF_UP);
+                this.subtotal = subtotal.divide(tcambio,4, RoundingMode.HALF_UP);                
             }
         }
         
@@ -163,6 +168,20 @@ public class DetalleTicket {
      */
     public void setAplimpto(String aplimpto) {
         this.aplimpto = aplimpto;
+    }
+
+    /**
+     * @return the descItem
+     */
+    public BigDecimal getDescItem() {
+        return descItem;
+    }
+
+    /**
+     * @param descItem the descItem to set
+     */
+    public void setDescItem(BigDecimal descItem) {
+        this.descItem = descItem;
     }
     
 }
