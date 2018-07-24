@@ -16,6 +16,7 @@ import com.dematicket.util.Util;
 import java.awt.Toolkit;
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -619,7 +620,8 @@ public class ForrFormaPago extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtSubTotalKeyTyped
     public void calculaMonto(){
-        monto = totalTemporal;
+        monto= new BigDecimal(txtTotalPagar.getText());
+        //monto = totalTemporal;
         monto=monto.setScale(2, BigDecimal.ROUND_HALF_UP);
         
         if(monto.compareTo(BigDecimal.ZERO)==0){

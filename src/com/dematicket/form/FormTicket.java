@@ -123,6 +123,9 @@ public class FormTicket extends javax.swing.JFrame {
         
         jcbTipoMoneda.setSelectedIndex(jcbTipoMoneda.getItemCount()-1);
         txtDscto.setText("0.0");
+        labelTotal3.setVisible(false);
+        lblContadorServ.setVisible(false);
+        spnCantidad.setValue(0);
     }
     
     /**
@@ -158,9 +161,7 @@ public class FormTicket extends javax.swing.JFrame {
         labelSubTotal = new javax.swing.JLabel();
         lblSubTotal = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
         btnAgregar = new javax.swing.JButton();
-        btnImprimir = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         btnEliminarDetalle = new javax.swing.JButton();
         btnBusqueda = new javax.swing.JButton();
@@ -184,6 +185,8 @@ public class FormTicket extends javax.swing.JFrame {
         btnProdcutMaintenance = new javax.swing.JButton();
         labelCantidad2 = new javax.swing.JLabel();
         txtDscto = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
         jpnHeader = new javax.swing.JPanel();
         lblImagen = new javax.swing.JLabel();
         jpnUsuario = new javax.swing.JPanel();
@@ -276,16 +279,6 @@ public class FormTicket extends javax.swing.JFrame {
         lblSubTotal.setForeground(new java.awt.Color(204, 0, 0));
         lblSubTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton1.setText("Forma Pago");
-        jButton1.setEnabled(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel2.add(jButton1);
-
         btnAgregar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnAgregar.setText("Agregar");
         btnAgregar.addActionListener(new java.awt.event.ActionListener() {
@@ -294,15 +287,6 @@ public class FormTicket extends javax.swing.JFrame {
             }
         });
         jPanel2.add(btnAgregar);
-
-        btnImprimir.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btnImprimir.setText("Imprimir");
-        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnImprimirActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnImprimir);
 
         btnLimpiar.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnLimpiar.setText("Limpiar");
@@ -425,6 +409,23 @@ public class FormTicket extends javax.swing.JFrame {
         txtDscto.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         txtDscto.setForeground(new java.awt.Color(204, 0, 0));
 
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jButton1.setText("PAGAR");
+        jButton1.setEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        btnImprimir.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        btnImprimir.setText("IMPRIMIR");
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -436,26 +437,34 @@ public class FormTicket extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addComponent(scrambledLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txtDireccionP))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                            .addComponent(scrambledLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(scrambledLabel3)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                    .addComponent(scrambledLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(txtDireccionP))
+                                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                                    .addComponent(scrambledLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(scrambledLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtRUCDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnUserMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(labelTipo1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtRUCDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
-                                .addComponent(btnUserMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(labelTipo1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jcbTipoDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jcbTipoDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(151, 151, 151)
+                                .addComponent(btnImprimir)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addGap(203, 203, 203)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
@@ -506,43 +515,49 @@ public class FormTicket extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelTicket)
-                                .addComponent(lblTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jcbTipoDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(labelTipo1)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jcbTipoMoneda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnExchangeRate, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(labelTicket)
+                                        .addComponent(lblTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jcbTipoDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(labelTipo1)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(8, 8, 8)
+                                        .addGap(15, 15, 15)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jLabel1)
-                                            .addComponent(lblExchangeRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jcbTipoMoneda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnExchangeRate, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(8, 8, 8)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                    .addComponent(jLabel1)
+                                                    .addComponent(lblExchangeRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(scrambledLabel2)
-                                            .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                    .addComponent(scrambledLabel2)
+                                                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                    .addComponent(scrambledLabel3)
+                                                    .addComponent(txtRUCDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(btnUserMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(scrambledLabel3)
-                                            .addComponent(txtRUCDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(btnUserMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(scrambledLabel4)
-                                    .addComponent(txtDireccionP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                            .addComponent(scrambledLabel4)
+                                            .addComponent(txtDireccionP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -782,6 +797,10 @@ public class FormTicket extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 461, Short.MAX_VALUE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(labelTotal3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblContadorServ, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(labelTotal1)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lblContadorSubTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -790,10 +809,6 @@ public class FormTicket extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lblContadorDscto, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(labelTotal3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblContadorServ, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(labelTotal4)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lblContadorIGV, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -933,11 +948,12 @@ public class FormTicket extends javax.swing.JFrame {
         modelo = new DefaultTableModel(
             new Object [][] {
             },
+                //"DESCRIPCION","PRECIO UNIT.","DESCUENTO","MONEDA", "CANTIDAD", "SUBTOTAL"
             new Object [] {
-                "TIPO","PRECIO UNIT.","DESCUENTO","MONEDA", "CANTIDAD", "SUBTOTAL"
-            }); 
-        
+                "CODIGO","DESCRIPCION","MONEDA","CANTIDAD","PRECIO UNIT.","DESCUENTO","SUBTOTAL"
+            });        
         jTable1.setModel(modelo);
+        //jTable1.getColumn(2).setPreferredWidth(10);
         //Implementar Reloj
         Reloj reloj = new Reloj(lblFecha);
         reloj.start();
@@ -1048,7 +1064,8 @@ public class FormTicket extends javax.swing.JFrame {
     private void spnCantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spnCantidadStateChanged
         // TODO add your handling code here:
         if(jcbTipoConcepto.getModel().getSize()>0){
-            if(jcbTipoMoneda.getSelectedItem().toString().startsWith("-")){
+            TipoCambioVO tipoCambio = TipoCambioDAO.consultarTipoCambio();
+            if(tipoCambio==null){
                 JOptionPane.showMessageDialog(null, "POR FAVOR SELECCIONE TIPO DE MONEDA", "DmPos", JOptionPane.WARNING_MESSAGE);
                 jcbTipoMoneda.requestFocus();
                 //spnCantidad.setValue(0);
@@ -2204,8 +2221,20 @@ public class FormTicket extends javax.swing.JFrame {
             }
         }
       
-      
-      Object [] object = new Object[]{ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getConcepto(),
+      //jesuscp
+      Object [] object = new Object[]{
+          ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getTipo(),
+          ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getConcepto(),
+          tmoneda,
+          spnCantidad.getValue().toString().trim(),
+            //Util.formatDecimal(ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getPrecioUnitario().doubleValue()),
+          Util.formatDecimal(precioConvertido.doubleValue()),
+          detalleTicket.getDescItem(),        
+          lblSubTotal.getText(),
+          2
+      };
+      /*
+        ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getConcepto(),
             //Util.formatDecimal(ConceptosDAO.getBeanByIndex(jcbTipoConcepto.getSelectedIndex()).getPrecioUnitario().doubleValue()),
             Util.formatDecimal(precioConvertido.doubleValue()),
         detalleTicket.getDescItem(),
@@ -2213,8 +2242,9 @@ public class FormTicket extends javax.swing.JFrame {
         spnCantidad.getValue().toString().trim(),
         lblSubTotal.getText(),
         2
-      };
+      */
         modelo.addRow(object);
+        //jTable1.getColumn(new Integer(2)).setPreferredWidth(10);
         lblTotal.setText(Util.formatDecimal(ticket.getTotal().doubleValue()));
         btnImprimir.setEnabled(false);       
         totalTemporal= new BigDecimal(ticket.getTotal().doubleValue());
@@ -2223,6 +2253,7 @@ public class FormTicket extends javax.swing.JFrame {
         }else{
             jButton1.setEnabled(true);
         }
+      spnCantidad.setValue(0);
     }//GEN-LAST:event_btnAgregarActionPerformed
   
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
@@ -3110,12 +3141,12 @@ public class FormTicket extends javax.swing.JFrame {
                         System.out.println("filas  Dolar-> "+modelo.getRowCount());
                         if(!modelo.getValueAt(0, 2).equals("D")){
                             for(int i=0; i<modelo.getRowCount();i++){
-                                BigDecimal precioUnitario = new BigDecimal((String) modelo.getValueAt(i, 1));
-                                BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 5));
+                                BigDecimal precioUnitario = new BigDecimal((String) modelo.getValueAt(i, 4));//1
+                                BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 6));//5
                                 //System.out.println("Antes : "+precioUnitario+"  -  "+subTotal);
                                 tcambio=new BigDecimal(tipoCambio.getTventa());
-                                modelo.setValueAt(Util.formatDecimal((precioUnitario.divide(tcambio,2,RoundingMode.HALF_UP)).doubleValue()), i, 1);
-                                modelo.setValueAt(Util.formatDecimal((subTotal.divide(tcambio,2,RoundingMode.HALF_UP)).doubleValue()), i, 5);
+                                modelo.setValueAt(Util.formatDecimal((precioUnitario.divide(tcambio,2,RoundingMode.HALF_UP)).doubleValue()), i, 4);//1
+                                modelo.setValueAt(Util.formatDecimal((subTotal.divide(tcambio,2,RoundingMode.HALF_UP)).doubleValue()), i, 6);//5
                                 modelo.setValueAt("D",i,2);
                                 //System.out.println("Despues : "+modelo.getValueAt(i, 1)+"  -  "+modelo.getValueAt(i, 4));
                             }
@@ -3150,13 +3181,13 @@ public class FormTicket extends javax.swing.JFrame {
                         System.out.println("filas  Soles-> "+modelo.getRowCount());
                         if(!modelo.getValueAt(0, 2).equals("S")){
                             for(int i=0; i<modelo.getRowCount();i++){
-                                BigDecimal precioUnitario = new BigDecimal((String) modelo.getValueAt(i, 1));
-                                BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 5));
+                                BigDecimal precioUnitario = new BigDecimal((String) modelo.getValueAt(i, 4));//1
+                                BigDecimal subTotal = new BigDecimal((String) modelo.getValueAt(i, 6));//5
                                 tcambio=new BigDecimal(tipoCambio.getTventa());
                                 //aca es para modificar
                                 BigDecimal monto =precioUnitario.multiply(tcambio);
-                                modelo.setValueAt(Util.formatDecimal(monto.doubleValue()), i, 1);
-                                modelo.setValueAt(Util.formatDecimal((subTotal.multiply(tcambio)).doubleValue()), i, 5);
+                                modelo.setValueAt(Util.formatDecimal(monto.doubleValue()), i, 4);
+                                modelo.setValueAt(Util.formatDecimal((subTotal.multiply(tcambio)).doubleValue()), i, 6);
                                 modelo.setValueAt("S",i,2);
                                 //System.out.println("Despues : "+modelo.getValueAt(i, 1)+"  -  "+modelo.getValueAt(i, 4));
                             }
@@ -3366,7 +3397,7 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JLabel labelTotal;
     private javax.swing.JLabel labelTotal1;
     private javax.swing.JLabel labelTotal2;
-    private javax.swing.JLabel labelTotal3;
+    public static javax.swing.JLabel labelTotal3;
     private javax.swing.JLabel labelTotal4;
     private javax.swing.JLabel lblCompania;
     private javax.swing.JTextField lblContadorDscto;
