@@ -9,6 +9,7 @@ package com.dematicket.data;
 import com.dematicket.bean.DocumentosVO;
 import com.dematicket.bean.EmpresaVO;
 import com.dematicket.bean.TiendaVO;
+import com.dematicket.bean.TiendaVO2;
 import com.dematicket.util.DbConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import javax.swing.JOptionPane;
  */
 public class TiendaDAO {
    static TiendaVO tienda;
+   static TiendaVO2 tienda2;
    static ArrayList<TiendaVO> tiendaList = new ArrayList<TiendaVO>();
    
   public static ArrayList<TiendaVO> consultarTiendaxEmpresa(String codigoEmpresa) {
@@ -55,6 +57,33 @@ public class TiendaDAO {
   }
   return tiendaList;
  }
+  
+ public static TiendaVO2 consultarTiendaxID(String codigoEmpresa, String idTienda) {
+  
+  DbConnection conex= new DbConnection();
+     
+  try {
+   PreparedStatement consulta = conex.getConnection().prepareStatement("SELECT TDAID, TDADES "
+           + " FROM DMTICKET.DMT_TIENDAS_MAE WHERE TDAESTADO =? AND CIAID=? AND TDAID =?");
+   consulta.setString(1, "A");
+   consulta.setString(2, codigoEmpresa);
+   consulta.setString(3, idTienda);
+   ResultSet res = consulta.executeQuery();
+  
+  while(res.next()){
+    tienda2= new TiendaVO2(); 
+    tienda2.setTiendadsc(res.getString("TDADES"));   
+    tienda2.setTiendaid(res.getString("TDAID")); 
+  }
+  res.close();
+  consulta.close();
+  conex.desconectar();
+  } catch (Exception e) {
+   JOptionPane.showMessageDialog(null, "no se pudo obtener las tiendas de la empresa seleccionada\n"+e);
+  }
+  return tienda2;
+ } 
+  
  public static TiendaVO getByIndex(int index) {  
      return tiendaList.get(index);
  }

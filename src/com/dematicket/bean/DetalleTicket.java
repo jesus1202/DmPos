@@ -7,6 +7,7 @@
 package com.dematicket.bean;
 
 import com.dematicket.data.SesionData;
+import com.dematicket.util.Util;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -34,7 +35,8 @@ public class DetalleTicket {
         this.cantidad = cantidad;        
         this.subtotal = conceptoCobro.getPrecioUnitario().multiply(new BigDecimal(cantidad));
         this.descItem = desc.multiply(new BigDecimal(cantidad));
-        
+        BigDecimal descuento = this.descItem;
+        this.descItem = new BigDecimal(Util.formatDecimal(descuento.doubleValue()));
         if(!conceptoCobro.getTipomon().equals(tmoneda)){
             if(tmoneda.equals("S")){
                 //conceptoCobro.setPrecioUnitario(conceptoCobro.getPrecioUnitario().multiply(tcambio));
