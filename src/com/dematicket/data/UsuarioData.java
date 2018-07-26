@@ -8,6 +8,7 @@ package com.dematicket.data;
 
 import com.dematicket.bean.Usuario;
 import com.dematicket.bean.UsuarioVO;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,6 +19,7 @@ public class UsuarioData {
 
     static Usuario usuario;
     static UsuarioVO usuarioVO;
+    static ArrayList<UsuarioVO> vendedorList = new ArrayList<UsuarioVO>();
     
     public static Usuario getUsuario(){
         if(usuario==null){
@@ -29,6 +31,17 @@ public class UsuarioData {
         UsuarioDAO miusuarioDAO = new UsuarioDAO();
         usuarioVO = miusuarioDAO.consultarUsuario(usuario, password);
       return usuarioVO;
+    }
+    
+    public static ArrayList<UsuarioVO> listarVendedoresBD(String ciaid, String tiendaid){
+        UsuarioDAO miusuarioDAO = new UsuarioDAO();
+        vendedorList = miusuarioDAO.listarVendedores(ciaid,tiendaid);
+      return vendedorList;
+    }
+    public static UsuarioVO getVendedorByIndex(int index){
+        UsuarioDAO miusuarioDAO = new UsuarioDAO();
+        return miusuarioDAO.getVendedorByIndex(index);
+      //return vendedorList;
     }
     
     public static UsuarioVO updateInsertUsuarioBD(String usuario, String password, String empresa, String perfil, String email, String nombres, String tienda, String estado){

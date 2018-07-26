@@ -11,6 +11,7 @@ import com.dematicket.util.DbConnection;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,6 +21,10 @@ import javax.swing.JOptionPane;
 public class UsuarioDAO {
   
   UsuarioVO usu;
+  
+  UsuarioVO usu2;
+  
+  static ArrayList<UsuarioVO> vendedorList = new ArrayList<UsuarioVO>();
   
   public UsuarioVO consultarUsuario(String usuario, String password) {
   
@@ -50,6 +55,58 @@ public class UsuarioDAO {
   }
   return usu;
  }
+ 
+ public ArrayList<UsuarioVO> listarVendedores(String ciaid, String tiendaid) {
+  
+  DbConnection conex= new DbConnection();
+     
+  try {
+   //primero se obtiene el codigo del perfil vendedor
+   PreparedStatement consultaPerfil = conex.getConnection().prepareStatement("SELECT PERFILID FROM DMTICKET.dmt_perfiles_mae WHERE ESTADO = ? AND PERFIL= ? ");
+   consultaPerfil.setString(1, "A");  
+   consultaPerfil.setString(2, "Vendedor");
+   ResultSet resPerfil = consultaPerfil.executeQuery();
+   String perfilID="";
+   if(resPerfil.next()){
+    perfilID =resPerfil.getString("PERFILID");
+    
+   }
+   resPerfil.close();
+   consultaPerfil.close();
+
+   //segundo procedemos a obtener la lista de vendedores
+   PreparedStatement consulta = conex.getConnection().prepareStatement("SELECT USUARIO,NOMBRE FROM DMTICKET.DMT_USUARIOS_MAE WHERE ESTADO = ? AND PERFIL= ? AND CIAID= ? AND IDTIENDA= ?");
+   consulta.setString(1, "A");
+   consulta.setString(2, perfilID);
+   consulta.setString(3, ciaid);
+   consulta.setString(4, tiendaid);
+   ResultSet res = consulta.executeQuery();
+   
+   
+   vendedorList.clear();
+   usu2= new UsuarioVO();     
+   usu2.setUsuario("- Seleccionar -");
+   vendedorList.add(usu2);
+    while(res.next()){
+        usu2= new UsuarioVO();
+        usu2.setUsuario(res.getString("USUARIO"));
+        usu2.setNombre(res.getString("NOMBRE")); 
+        vendedorList.add(usu2);
+
+    }
+    res.close();
+    consulta.close();
+    conex.desconectar();
+    } catch (Exception e) {
+     JOptionPane.showMessageDialog(null, "no se pudo obtener la lista de vendedores\n"+e);
+    }
+    return vendedorList;
+ }
+ 
+  public UsuarioVO getVendedorByIndex(int index) {  
+     return vendedorList.get(index);
+ }
+  
  public void cambiarClaveUsuario(String usuario, String password, String newPassword) {
   boolean flag = false;
   DbConnection conex= new DbConnection();     

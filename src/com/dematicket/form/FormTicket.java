@@ -7,6 +7,7 @@ import com.dematicket.bean.DocumentosVO;
 import com.dematicket.bean.MonedaVO;
 import com.dematicket.bean.Ticket;
 import com.dematicket.bean.TipoCambioVO;
+import com.dematicket.bean.UsuarioVO;
 import com.dematicket.bean.VentasCabeceraVO;
 import com.dematicket.bean.VentasDetalleVO;
 import com.dematicket.data.ClienteData;
@@ -18,6 +19,7 @@ import com.dematicket.data.PtoVentaDAO;
 import com.dematicket.data.SesionData;
 import com.dematicket.data.TiendaDAO;
 import com.dematicket.data.TipoCambioDAO;
+import com.dematicket.data.UsuarioDAO;
 import com.dematicket.data.UsuarioData;
 import com.dematicket.data.VentasDAO;
 
@@ -129,6 +131,7 @@ public class FormTicket extends javax.swing.JFrame {
         labelTotal3.setVisible(false);
         lblContadorServ.setVisible(false);
         spnCantidad.setValue(0);
+        loadComboVendedor();
     }
     
     /**
@@ -189,6 +192,8 @@ public class FormTicket extends javax.swing.JFrame {
         txtDscto = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
+        labelTipo2 = new javax.swing.JLabel();
+        jcbVendedor = new javax.swing.JComboBox();
         jpnHeader = new javax.swing.JPanel();
         lblImagen = new javax.swing.JLabel();
         jpnUsuario = new javax.swing.JPanel();
@@ -430,6 +435,17 @@ public class FormTicket extends javax.swing.JFrame {
             }
         });
 
+        labelTipo2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        labelTipo2.setText("Vend : ");
+
+        jcbVendedor.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jcbVendedor.setMaximumSize(new java.awt.Dimension(350, 21));
+        jcbVendedor.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbVendedorItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -455,16 +471,20 @@ public class FormTicket extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(txtRUCDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(18, 18, 18)
-                                .addComponent(btnUserMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnUserMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(labelTipo2, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jcbVendedor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(labelTipo1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jcbTipoDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnImprimir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(189, 189, 189)
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
@@ -516,31 +536,32 @@ public class FormTicket extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelTicket)
-                                .addComponent(lblTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jcbTipoDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(labelTipo1))
-                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jcbTipoMoneda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnExchangeRate, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(8, 8, 8)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addGap(9, 9, 9)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(jLabel1)
-                                            .addComponent(lblExchangeRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(labelTicket)
+                                            .addComponent(lblTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jcbTipoDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(labelTipo1)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(15, 15, 15)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel2)
+                                            .addComponent(jcbTipoMoneda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(btnExchangeRate, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(8, 8, 8)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                    .addComponent(jLabel1)
+                                                    .addComponent(lblExchangeRate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -554,10 +575,11 @@ public class FormTicket extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                             .addComponent(scrambledLabel4)
-                                            .addComponent(txtDireccionP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
+                                            .addComponent(txtDireccionP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(labelTipo)
@@ -573,6 +595,10 @@ public class FormTicket extends javax.swing.JFrame {
                                 .addComponent(labelCantidad2)
                                 .addComponent(txtDscto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelTipo2)
+                            .addComponent(jcbVendedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
                         .addComponent(btnProdcutMaintenance, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -852,6 +878,19 @@ public class FormTicket extends javax.swing.JFrame {
         }
     }
     
+    private void loadComboVendedor(){
+        /*for(ConceptoCobro temp: ConceptoCobroList.getConceptos()){
+            jcbTipoConcepto.addItem(temp.getConcepto() + " (S/. " + Util.formatDecimal(temp.getPrecioUnitario().doubleValue()) + ")");
+        }*/
+        for(UsuarioVO temp: UsuarioData.listarVendedoresBD(UsuarioData.getUsuario().getEmpresa(),UsuarioData.getUsuario().getTienda())){
+            if(temp.getUsuario().startsWith("-")){
+               jcbVendedor.addItem(temp.getUsuario()); 
+            }else{
+               jcbVendedor.addItem(temp.getUsuario() + " - " + temp.getNombre());
+            }            
+        }
+    }
+    
     private void loadComboTipo(){
         /*for(ConceptoCobro temp: ConceptoCobroList.getConceptos()){
             jcbTipoConcepto.addItem(temp.getConcepto() + " (S/. " + Util.formatDecimal(temp.getPrecioUnitario().doubleValue()) + ")");
@@ -1101,6 +1140,11 @@ public class FormTicket extends javax.swing.JFrame {
     }//GEN-LAST:event_spnCantidadStateChanged
 
     private void seleccionarMedioPago(){
+        String codVendedor= jcbVendedor.getSelectedItem().toString();
+        if(codVendedor.startsWith("-")){
+            JOptionPane.showMessageDialog(null, "POR FAVOR INGRESE VENDEDOR", "DmPos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         if(FormFormaPago==null){
             FormFormaPago = new ForrFormaPago();
             
@@ -1184,7 +1228,8 @@ public class FormTicket extends javax.swing.JFrame {
             limpiarTicket();
             inicializaTablasFormaPago();
             FormFormaPago.limpiaTabla();
-            
+            jcbVendedor.setSelectedIndex(0);
+            jcbTipoConcepto.setSelectedIndex(0);
         }catch(Exception ex){
             ex.printStackTrace();
         } 
@@ -1430,7 +1475,7 @@ public class FormTicket extends javax.swing.JFrame {
         txtDireccionP.setText("");
         spnCantidad.setValue(0);
         btnImprimir.setEnabled(false);
-        jcbTipoDocumento.setSelectedIndex(indexComboTipoDocumento);
+        jcbTipoDocumento.setSelectedIndex(indexComboTipoDocumento);        
     }
     
     private void writeCabecera(File file) throws IOException{
@@ -1506,7 +1551,7 @@ public class FormTicket extends javax.swing.JFrame {
             ventasCabeceraVO.setCLASEAUX(SesionData.getSesion().getClaseAux());
             ventasCabeceraVO.setCLIERUC((ticket.getIdentificacionCliente().trim().compareTo("")==0?"00000000":ticket.getIdentificacionCliente()));//si no ingresa ruc le pone el codigo de cliente genérico
             ventasCabeceraVO.setTURNO(SesionData.getSesion().getTurno());
-            ventasCabeceraVO.setVEID(UsuarioData.getUsuario().getUsuario());//codigo del vendedor
+            ventasCabeceraVO.setVEID(UsuarioData.getVendedorByIndex(jcbVendedor.getSelectedIndex()).getUsuario());//codigo del vendedor
             ventasCabeceraVO.setFORMAPAGO(SesionData.getSesion().getFormaPago());
             String tmoneda="";
             if(jcbTipoMoneda.getSelectedItem().toString().endsWith("S")){
@@ -3282,6 +3327,10 @@ public class FormTicket extends javax.swing.JFrame {
         
         seleccionarMedioPago();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jcbVendedorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbVendedorItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jcbVendedorItemStateChanged
  
 //jcastillo fin           
     private void sendFile(){
@@ -3406,6 +3455,7 @@ public class FormTicket extends javax.swing.JFrame {
     public static javax.swing.JComboBox jcbTipoConcepto;
     public static javax.swing.JComboBox jcbTipoDocumento;
     public static javax.swing.JComboBox<String> jcbTipoMoneda;
+    public static javax.swing.JComboBox jcbVendedor;
     private javax.swing.JPanel jpnHeader;
     private javax.swing.JPanel jpnUsuario;
     private javax.swing.JLabel labelCantidad;
@@ -3415,6 +3465,7 @@ public class FormTicket extends javax.swing.JFrame {
     private javax.swing.JLabel labelTicket;
     private javax.swing.JLabel labelTipo;
     private javax.swing.JLabel labelTipo1;
+    private javax.swing.JLabel labelTipo2;
     private javax.swing.JLabel labelTotal;
     private javax.swing.JLabel labelTotal1;
     private javax.swing.JLabel labelTotal2;
