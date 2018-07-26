@@ -2240,7 +2240,8 @@ public class FormTicket extends javax.swing.JFrame {
         importeSinIgv=detalleTicket.getSubtotal().subtract(detalleTicket.getMontoIgv());
         sumaSubtotalIgv = sumaSubtotalIgv.add(importeSinIgv);
         
-        lblContadorSubTotal.setText(Util.formatDecimal(sumaSubtotalIgv.doubleValue()));
+        //lblContadorSubTotal.setText(Util.formatDecimal(sumaSubtotalIgv.doubleValue()));
+        lblContadorSubTotal.setText(Util.formatDecimal((sumaSubtotalIgv.add(sumaDesc)).doubleValue()));
         lblContadorDscto.setText(Util.formatDecimal(sumaDesc.doubleValue()));
         lblContadorServ.setText("0");
         lblContadorIGV.setText(Util.formatDecimal(sumaIGV.doubleValue()));
