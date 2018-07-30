@@ -1687,7 +1687,7 @@ public class FormTicket extends javax.swing.JFrame {
                 escribir.write(txtDireccionP.getText());
                 escribir.write(Util.FILE_DELIMITADOR);//0
                 //bdTest = bdTest.setScale(2, BigDecimal.ROUND_HALF_UP);
-                BigDecimal monto1 = (BigDecimal) (ticket.getMontoIgv()==BigDecimal.ZERO?0:ticket.getTotal().subtract(ticket.getMontoIgv()));
+                BigDecimal monto1 = (BigDecimal) (ticket.getMontoIgv()==BigDecimal.ZERO?BigDecimal.ZERO:ticket.getTotal().subtract(ticket.getMontoIgv()));
                 monto1=monto1.setScale(2, BigDecimal.ROUND_HALF_UP);
                 BigDecimal monto2 = (BigDecimal) ticket.getMontoIgv();
                 monto2=monto2.setScale(2, BigDecimal.ROUND_HALF_UP);
