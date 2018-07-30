@@ -132,7 +132,7 @@ public class FormUserMaintainer extends javax.swing.JFrame {
 
         jLabel7.setText("Sexo:");
 
-        jLabel8.setText("Fecha Nacimiento:");
+        jLabel8.setText("Fecha Nacimiento \n/ Creación:");
 
         jLabel9.setText("Dirección:");
 
@@ -150,6 +150,12 @@ public class FormUserMaintainer extends javax.swing.JFrame {
         jLabel15.setToolTipText("");
 
         jLabel16.setText("Celular:");
+
+        jcbDocSunat.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbDocSunatItemStateChanged(evt);
+            }
+        });
 
         jcbTpersona.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1 - Natural", "2 - Jurídical" }));
 
@@ -242,7 +248,10 @@ public class FormUserMaintainer extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(txtTelefono2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(txtEmail)))
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fecNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel7)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -264,12 +273,10 @@ public class FormUserMaintainer extends javax.swing.JFrame {
                                         .addGap(29, 29, 29)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(jcbSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(fecNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGap(1, 1, 1)
                                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jcbSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(jcbTpersona, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(txtNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 526, javax.swing.GroupLayout.PREFERRED_SIZE)))))))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -632,6 +639,15 @@ public class FormUserMaintainer extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_txtEmailKeyTyped
+
+    private void jcbDocSunatItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbDocSunatItemStateChanged
+        // TODO add your handling code here:
+        if(jcbDocSunat.getSelectedItem().toString().startsWith("6")){
+            jcbSexo.setEnabled(false);
+        }else{
+            jcbSexo.setEnabled(true);
+        }
+    }//GEN-LAST:event_jcbDocSunatItemStateChanged
     
     private void cargarComboProvincia(String codigoDepartamento){
         jcbProv.removeAllItems();
