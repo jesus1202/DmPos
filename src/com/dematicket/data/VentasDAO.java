@@ -470,7 +470,9 @@ public class VentasDAO {
             " FACTCAM,FACFLAGD,FACIGVMO,FACIGVMN,FACIGVME,FACISCMO,FACISCMN,FACISCME,FACTOTMO, " +
             " FACTOTMN,FACTOTME,FACTIP,TIPODOCUMENTO,TIPPERID,FACDSCTO1,FACIMPREP,FACFEVCMTO, " +
             " FACTCLI,FACTDES,CLIEDIR,TIPOADQ,FACIGV2MN,FACIGV2ME,FACIGV2MO,INICIAL,FACSERMO, " +
-            " FACSERMN,FACSERME,PORIGV,PORSER,FACMTOGRAV,FACMTOEXO,FACMTOINA,FACMTOGRAT,TIPOPERACION,PVTAID,TURNO FROM DMTICKET.DMT_VENTAS_CAB WHERE PROCESADO IS NULL");
+            " FACSERMN,FACSERME,PORIGV,PORSER,FACMTOGRAV,FACMTOEXO,FACMTOINA,FACMTOGRAT,TIPOPERACION,PVTAID,TURNO FROM DMTICKET.DMT_VENTAS_CAB WHERE PROCESADO IS NULL AND IDCOMPANIA = ? AND PVTAID = ?");
+            consultaCab.setString(1,UsuarioData.getUsuario().getEmpresa());
+            consultaCab.setString(2,UsuarioData.getUsuario().getPtoVenta());
             ResultSet resCab = consultaCab.executeQuery();
             //esta seccion falta verificar
             PreparedStatement consultaDet = conex.getConnection().prepareStatement("SELECT IDCOMPANIA,TIPODOCUMENTO,SERIE,NUMERO,NUMREG,CODCON, " +
@@ -478,7 +480,8 @@ public class VentasDAO {
             " DFACMTOMO,DFACMTOMN,DFACMTOME,DATE_FORMAT(STR_TO_DATE(FECHVTA,'%d/%m/%Y %H:%i:%s'),\"%d/%m/%Y %H:%i:%s\")FECHVTA,DFACIMP1,DFACIMPMTO1, " +
             " DFACVTOTMO,DFACVTOTMN,DFACVTOTME,DFACTFLAG,USUREG,DATE_FORMAT(FECREG,\"%Y/%m/%d\")FECREG  " +
             " FROM DMTICKET.DMT_VENTAS_DET WHERE " +
-            " PROCESADO IS NULL ORDER BY NUMREG");
+            " PROCESADO IS NULL AND IDCOMPANIA =? ORDER BY NUMREG");
+            consultaDet.setString(1,UsuarioData.getUsuario().getEmpresa());
             ResultSet resDet = consultaDet.executeQuery();
             
             if(resCab.next() || resDet.next()){

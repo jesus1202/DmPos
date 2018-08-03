@@ -11,7 +11,7 @@ public class DbConnection {
    static String bd = "dmticket";
    static String login = "root";
    static String password = "root";
-   static String url = "jdbc:mysql://localhost/"+bd;
+   static String url = "jdbc:mysql://192.168.31.1:3306/"+bd;
  
    Connection connection = null;
  
